@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useContext, useEffect } from "react";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { Link } from 'react-router-dom';
+import { EssaiContext } from "../../EssaisContext";
 
 const Essai = (props) => {
+  const [globalData, setGlonbalData] = useContext(EssaiContext);
+  const handleOnClick = (essai) => {
+    setGlonbalData({...globalData, 
+      selectedEssai: essai})
+  }
   return (
     <CRow>
       <CCol lg={6}>
@@ -34,6 +40,10 @@ const Essai = (props) => {
               <li>Créé par : <a href="#">{props.essai.createdBy}</a></li>
               <li>Dernière modification : {props.essai.lastModifiedDate}</li>
               <li>Modifié par: <a href="#">{props.essai.lastModifiedBy}</a></li>
+              <li onClick={() => handleOnClick(props.essai)}><Link 
+                to={`/pdf/${props.essai.fichier.id}`} 
+                >Voir PDF
+                </Link></li>
             </ul>
           </CCardBody>
         </CCard>

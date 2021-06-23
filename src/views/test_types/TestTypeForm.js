@@ -18,7 +18,7 @@ const BasicForms = ({match}) => {
 
   useEffect(() => {
    if( match.params.id ){
-    fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`+match.params.id)
+    fetch(`http://localhost:8080/api/type_essais/`+match.params.id)
       .then((response) => response.json())
       .then((json) => setDataForEdit(json))
       
@@ -62,11 +62,11 @@ const BasicForms = ({match}) => {
         
         //check if it is POST or PUT
         if(match.params.id){
-          fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`+match.params.id, requestOptions)
+          fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
             .then(response => response.json())
             .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }else{
-            fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`, requestOptions)
+            fetch(`http://localhost:8080/api/type_essais/`, requestOptions)
             .then(response => response.json())
             .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
           }

@@ -19,7 +19,7 @@ const BasicForms = ({match}) => {
 
   useEffect(() => {
     //__START fetch all test types for the select field
-      fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`)
+      fetch(`http://localhost:8080/api/type_essais/`)
         .then((response) => response.json())
         .then((json) => {
           setAllTestTypes(json)
@@ -30,7 +30,7 @@ const BasicForms = ({match}) => {
     //__END fetch all test types for the select field
 
     //__START fetch all test types for the select field
-      fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`)
+      fetch(`http://localhost:8080/api/institutions/`)
       .then((response) => response.json())
       .then((json) =>{ 
         setAllInstitutions(json)
@@ -41,7 +41,7 @@ const BasicForms = ({match}) => {
     //__END fetch all test types for the select field
 
    if( match.params.id ){
-    fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id)
+    fetch(`http://localhost:8080/api/essais/`+match.params.id)
       .then((response) => response.json())
       .then((json) => setDataForEdit({
         id:json.id,
@@ -250,7 +250,7 @@ const handleChange = (event) => {
             
             //check if it is POST or PUT
             if(match.params.id){
-              fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id, requestOptions)
+              fetch(`http://localhost:8080/api/essais/`+match.params.id, requestOptions)
                 .then(response => response.json())
                 .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
@@ -258,8 +258,22 @@ const handleChange = (event) => {
                 });
             }else{
               // console.log(requestOptions.body)
-                fetch(`${process.env.REACT_APP_API_URL}/api/essais`, requestOptions)
-                .then(response => response.json())
+                fetch(`http://localhost:8080/api/essais`, requestOptions)
+                .then(response => response.json())//to the app server
+                .then( essaiSaved => {
+                  fetch(`http://localhost:8081/api/file`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json',
+                    'Accept': 'application/json'},
+                    body: JSON.stringify({
+                      hashNomFichier: essaiSaved.fichier.hashNomFichier,
+                      base64: dataForAPI.pdf
+                    })})
+                    .then(res => console.log(res))
+                  }
+                  )
+                  
+              
                 .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.error('Error:', error);
@@ -277,6 +291,20 @@ const handleChange = (event) => {
               }
               resolve();
           });
+      }
+      function fourth(){
+        return new Promise(function(resolve, reject){
+          console.log("fourth");
+          const requestOptions = {
+            method: match.params.id ?'PUT':'POST',
+            headers: { 'Content-Type': 'application/json',
+            'Accept': 'application/json'},
+            body: JSON.stringify(dataForAPIref.current)
+        };
+        fetch(`http://localhost:8081/api/file`, )
+          .then(res => console.log(res));
+          resolve();
+        });
       }
       first()
       .then(second)
