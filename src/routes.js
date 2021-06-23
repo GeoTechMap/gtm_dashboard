@@ -13,8 +13,9 @@ const TestTypes = React.lazy(() => import('./views/test_types/TestTypes'));
 
 const TestForm = React.lazy(() => import('./views/essais/EssaiForm'));
 const Tests = React.lazy(() => import('./views/essais/Essais'));
+const PDF = React.lazy(() => import('./views/essais/PDF'));
 
-const Carte = React.lazy(() => import('./views/carte/Carte'));
+// const Carte = React.lazy(() => import('./views/carte/Carte'));
 const Fichier = React.lazy(() => import('./views/fichier/Fichier'));
 
 
@@ -22,7 +23,7 @@ const Fichier = React.lazy(() => import('./views/fichier/Fichier'));
 const routes = [
   { path: '/', exact: true, name: 'Accueil' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
-  { path: '/carte', exact: true, name: 'Carte', component: Carte },
+  // { path: '/carte', exact: true, name: 'Carte', component: Carte },
   { path: '/fichier', exact: true, name: 'Fichier', component: Fichier },
 
   { path: '/users/create', exact: true, name: 'Ajouter', component: UserForm },//CRAETE
@@ -40,6 +41,8 @@ const routes = [
   { path: '/tests/create', exact: true, name: 'Ajouter', component: TestForm },//CRAETE
   { path: '/tests', exact: true,  name: 'Essais ', component: Tests },//READ
   { path: '/tests/edit/:id', exact: true, name: 'Modifier', component: TestForm },//UPDATE
+
+  { path: '/pdf/:id', exact: true, name: 'Document PDF', component: PDF },
 ];
 
 export default routes;

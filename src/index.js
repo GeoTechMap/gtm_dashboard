@@ -15,6 +15,8 @@ import { Provider } from 'react-redux'
 import StoreService from "./services/StoreService";
 import HttpService from "./services/HttpService";
 import UserService from "./services/UserService";
+
+import { EssaiContextProvider } from "./EssaisContext";
 const store = StoreService.setup();
 React.icons = icons
 
@@ -23,7 +25,9 @@ const renderApp = () =>
     <Provider 
     store={store}
     >
-       <App/>   
+        <EssaiContextProvider>
+            <App/>
+      </EssaiContextProvider>
     </Provider>,
     document.getElementById('root')
   );
