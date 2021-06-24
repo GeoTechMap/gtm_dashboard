@@ -1,40 +1,49 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { EssaiContext } from "../../EssaisContext";
 
-const LoadFromBase64Example = () => {
+import SinglePagePDFViewer from "./single-page";
+import AllPagesPDFViewer from "./all-pages";
+import "./styles.css";
+
+const LoadFromBase64Example = ({match}) => {
     const [globalData, setGlonbalData] = useContext(EssaiContext);
+
 
     const [data, setData] = useState({})
     useEffect(() => {
-        fetch(`http://localhost:8081/api/file/getfile`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json',
-            'Accept': 'application/json'},
-            body: JSON.stringify({
-                nomFichier: globalData.selectedEssai.fichier.nom,
-                hashNomFichier: globalData.selectedEssai.fichier.hashNomFichier,
-                hashBase64:globalData.selectedEssai.fichier.hashPdf
-            })})
-            .then(res => res.json())
-            .then(res => setData(res))
-            .catch((error) => {
-                console.error('Error:', error);
-              });
+        fetch(`http://localhost:8080/api/file/info?id=${match.params.id}`)
+        .then(response => response.json())
+        .then(data =>   {
+            fetch(`http://localhost:8081/api/file/getfile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json',
+                'Accept': 'application/json'},
+                body: JSON.stringify({
+                    nomFichier: data.nom,
+                    hashNomFichier: data.hashNomFichier,
+                    hashBase64:data.hashPdf
+                })})
+                .then(res => res.json())
+                .then(res => setData(res))
+                .catch((error) => {
+                    console.error('Error:', error);
+                  });
+       return data;
+     })
+      
+        
       
     }, []);
-  
-
+ 
     return (
-        <div  >{console.log(globalData)}
-            <embed src={`data:application/pdf;base64,${data.base64File}`}  
-            type="application/pdf" width="100%" height="100%"></embed>
+        // <div  >{console.log(globalData)}
+        //     <embed src={`data:application/pdf;base64,${data.base64File}`}  
+        //     type="application/pdf" width="100%" height="100%"></embed>
        
-        {/* <iframe
-        src={`data:application/pdf;base64,${
-            data.base64File
-        }`}
-        />  */}
-        </div>
+        // </div>
+        <div className="App">
+        <SinglePagePDFViewer pdf={`data:application/pdf;base64,${data.base64File}`}  />
+      </div>
   
     );
 };

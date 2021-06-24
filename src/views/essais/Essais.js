@@ -28,7 +28,7 @@ import Test from "./Essai";
     { key: 'institution', label:'Institution', _style: { width: '20%'} },
     // { key: 'departement', label:'Département', _style: { width: '20%'} },
     // { key: 'adresse', label:'Adresse', _style: { width: '20%'} },
-    { key: 'idFichier', label:'Fichier', _style: { width: '20%'} },
+    { key: 'fichier', label:'Fichier', _style: { width: '20%'} },
     { key: 'createdDate', label:'Date de création', _style: { width: '10%'} },
     {
       key: 'show_details',
@@ -106,6 +106,12 @@ import Test from "./Essai";
           (item)=>{
             return (
               <td>{item.institution.nom} ({item.institution.sigle})</td>
+              )
+          },
+          'fichier':
+          (item)=>{
+            return (
+              <td>{item.fichier.nom}</td>
               )
           },
           // 'departement':
