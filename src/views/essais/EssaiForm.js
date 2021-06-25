@@ -24,8 +24,8 @@ const BasicForms = ({match}) => {
         .then((json) => {
           setAllTestTypes(json)
          return json;})
-         .then((json) => setInitVal({...initVal,
-          typeEssai:json[0].id
+         .then((json) => setInitVal({
+          typeEssai:json[0].id,
         }))
     //__END fetch all test types for the select field
 
@@ -35,8 +35,8 @@ const BasicForms = ({match}) => {
       .then((json) =>{ 
         setAllInstitutions(json)
         return json;})
-      .then((json) => setInitVal({...initVal,
-        institution:json[0].id
+      .then((json) => setInitVal({
+        institution:json[0].id,
       }))
     //__END fetch all test types for the select field
 
@@ -292,137 +292,11 @@ const handleChange = (event) => {
               resolve();
           });
       }
-      function fourth(){
-        return new Promise(function(resolve, reject){
-          console.log("fourth");
-          const requestOptions = {
-            method: match.params.id ?'PUT':'POST',
-            headers: { 'Content-Type': 'application/json',
-            'Accept': 'application/json'},
-            body: JSON.stringify(dataForAPIref.current)
-        };
-        fetch(`http://localhost:8081/api/file`, )
-          .then(res => console.log(res));
-          resolve();
-        });
-      }
+
       first()
       .then(second)
       .then(third);
 
-
-
-          //console.log(values)
-      //     function myfunction() {
-      //       longfunctionfirst(shortfunctionsecond);
-      //   }
-      //   myfunction();
-
-      //   function longfunctionfirst(callback) {
-      //     toBase64(myFile.file, (base64String)=>{
-      //       console.log('======1')
-            
-      //     setDataForAPI({
-      //       typeEssai: {
-      //         id:values.typeEssai
-      //     },
-      //     institution: {
-      //         id:values.institution
-      //     },
-      //     position: {
-      //         id:42
-      //     },
-      //     fichier: {
-      //         id:1
-      //     },
-      //     motsCles: values.motsCles,
-      //     // pdf:base64String
-      //   })
-      //   console.log(dataForAPI)
-      //   callback();
-      //   })
-      // }
-      //     //  toBase64(myFile.file)
-      //     // .then((result) => {
-      //     //   // console.log(result)
-      //     //   setDataForAPI({
-      //     //     typeEssai: {
-      //     //       id:values.typeEssai
-      //     //   },
-      //     //   institution: {
-      //     //       id:values.institution
-      //     //   },
-      //     //   position: {
-      //     //       id:42
-      //     //   },
-      //     //   fichier: {
-      //     //       id:1
-      //     //   },
-      //     //   motsCles: values.motsCles,
-      //     //   //pdf:result
-      //     // });
-      //     // })
-      //     // .then(res => {
-      //     //   // console.log(dataForAPI)
-      //     //   console.log(dataForAPI)
-      //     // })
-        
-        
-         
-   
-      // // values.pdf=getBase64(myFile.file);
-      //   // Create an object of formData
-      //   // const formData = new FormData();
-      //   // formData.append('typeEssai', values.typeEssai);
-      //   // formData.append('institution', values.institution);
-      //   // formData.append('latitude', values.latitude);
-      //   // formData.append('longitude', values.longitude);
-      //   // formData.append('altitude', values.altitude);
-      //   // formData.append('motsCles', values.motsCles);
-      //   // formData.append('commentaire', values.commentaire);
-      //   //.............
-      // //   formData.append('file', myFile.file);
-      // //   formData.append('essai', new Blob([JSON.stringify({
-      // //     "typeEssai": Number(values.typeEssai),
-      // //     "institution": values.institution,
-      // //     "latitude": values.latitude,
-      // //     "longitude": values.longitude,
-      // //     "altitude": values.altitude,
-      // //     "motsCles": values.motsCles,
-      // //     "commentaire": values.commentaire
-      // // })], {
-      // //         type: "application/json"
-      // //     }));
-      // function shortfunctionsecond() {
-      //   console.log('======2')
-      //     const requestOptions = {
-      //       method: match.params.id ?'PUT':'POST',
-      //       headers: { 'Content-Type': 'application/json',
-      //       'Accept': 'application/json'},
-      //       body: JSON.stringify(dataForAPI)
-      //   };
-        
-      //   //check if it is POST or PUT
-      //   if(match.params.id){
-      //     fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id, requestOptions)
-      //       .then(response => response.json())
-      //       .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
-      //   }else{
-      //     // console.log(requestOptions.body)
-      //       fetch(`${process.env.REACT_APP_API_URL}/api/essais`, requestOptions)
-      //       .then(response => response.json())
-      //       // fetch(`${process.env.REACT_APP_API_URL}/api/essais`,
-      //       //   {
-      //       //     method: 'POST',
-      //       //     body: values,
-      //       //   }
-      //       // )
-      //       // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
-      //       // .catch((error) => {
-      //       //   console.error('Error:', error);
-      //       // });
-      //     }
-      //   }
      
             setTimeout(() => {
               setAlert({...alert, isActive: false, message:''})
@@ -431,7 +305,7 @@ const handleChange = (event) => {
     >
       { formik => (
         <div>
-       <Form>
+       <Form>{console.log(initVal)}
        { alert.isActive ?  <CAlert color="info" closeButton>{alert.message}</CAlert> : ''}
           <CRow>
             <CCol xs="12" sm="6">
