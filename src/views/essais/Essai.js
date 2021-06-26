@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import { Link } from 'react-router-dom';
 import { EssaiContext } from "../../EssaisContext";
@@ -37,9 +37,9 @@ const Essai = (props) => {
               <li>Altitude : {props.essai.position.altitude}</li>
               <li>Fichier : {props.essai.fichier.id}</li>
               <li>Créé le : {props.essai.createdDate}</li>
-              <li>Créé par : <a href="#">{props.essai.createdBy}</a></li>
+              <li>Créé par : <a href="www.google.com">{props.essai.createdBy}</a></li>
               <li>Dernière modification : {props.essai.lastModifiedDate}</li>
-              <li>Modifié par: <a href="#">{props.essai.lastModifiedBy}</a></li>
+              <li>Modifié par: <a href="www.google.com">{props.essai.lastModifiedBy}</a></li>
               <li onClick={() => handleOnClick(props.essai)}><Link 
                 to={`/pdf/${props.essai.fichier.id}`} 
                 >Voir PDF

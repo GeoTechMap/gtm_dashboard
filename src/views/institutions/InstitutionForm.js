@@ -23,7 +23,7 @@ const BasicForms = ({match}) => {
       .then((json) => setDataForEdit(json))
       
    }
-  }, []);
+  }, [match.params.id]);
 
   const initVal ={
     nom: '',
@@ -52,7 +52,7 @@ const BasicForms = ({match}) => {
     telephone1: Yup.string()
       .max(15,"Maximum 15 caractères")
       .required("Champs obligatire"),
-    telephone1: Yup.string()
+    telephone2: Yup.string()
       .max(15,"Maximum 15 caractères"),
     email: Yup.string()
       .email("Email invalide")

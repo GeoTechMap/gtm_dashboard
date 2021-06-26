@@ -1,6 +1,5 @@
 import React from 'react';
-import { CSelect,
-    CInputFile, CLabel,CCol} from '@coreui/react';
+import { CSelect} from '@coreui/react';
 import { ErrorMessage, useField } from 'formik';
 
 export const TextField = ({label, type, options, ...props}) => {
@@ -8,17 +7,18 @@ export const TextField = ({label, type, options, ...props}) => {
     return (
         <div className="mb-2" >
             <label htmlFor={field.name}>{label}</label>
-            {type == "textarea" ?
+            {type === "textarea" ?
             <textarea 
             className={`form-control shadow-none ${meta.touched && meta.error && 'is-invalid' }`}
             placeholder="Veuillez entrer la description..."
             rows="6"
             {...field} {...props}
             ></textarea>:
-            type == "select" ?
+            type === "select" ?
             <CSelect name={label}
             className={`form-control shadow-none ${meta.touched && meta.error && 'is-invalid' }`}
             {...field} {...props}>
+                <option  value={0}>Choisir</option>
                  { options.map((option, key) => {              
                     return <option key={key} value={option.id}>{option.nom}</option>
                     })}      

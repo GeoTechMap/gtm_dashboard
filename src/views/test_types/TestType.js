@@ -15,9 +15,9 @@ const TypeEssai = (props) => {
               <li>Sigle : {props.testType.sigle}</li>
               <li>Description : {props.testType.description}</li>
               <li>Créé le : {props.testType.createdDate}</li>
-              <li>Créé par : <a href="#">{props.testType.createdBy}</a></li>
+              <li>Créé par : <a href="wwww.google.com">{props.testType.createdBy}</a></li>
               <li>Dernière modification : {props.testType.lastModifiedDate}</li>
-              <li>Modifié par: <a href="#">{props.testType.lastModifiedBy}</a></li>
+              <li>Modifié par: <a href="wwww.google.com">{props.testType.lastModifiedBy}</a></li>
             </ul>
           </CCardBody>
         </CCard>

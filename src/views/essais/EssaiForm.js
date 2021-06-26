@@ -12,21 +12,22 @@ import {
   CFormText,
   CRow,
   CAlert,
-  CLabel,CInputFile
+  CLabel
 } from '@coreui/react'
 
 const BasicForms = ({match}) => {
 
   useEffect(() => {
+
     //__START fetch all test types for the select field
       fetch(`http://localhost:8080/api/type_essais/`)
         .then((response) => response.json())
         .then((json) => {
           setAllTestTypes(json)
          return json;})
-         .then((json) => setInitVal({
-          typeEssai:json[0].id,
-        }))
+        //  .then((json) => setInitVal({...initVal,
+        //   typeEssai:json[0].id,
+        // }))
     //__END fetch all test types for the select field
 
     //__START fetch all test types for the select field
@@ -35,9 +36,9 @@ const BasicForms = ({match}) => {
       .then((json) =>{ 
         setAllInstitutions(json)
         return json;})
-      .then((json) => setInitVal({
-        institution:json[0].id,
-      }))
+      // .then((json) => setInitVal({...initVal,
+      //   institution:json[0].id,
+      // }))
     //__END fetch all test types for the select field
 
    if( match.params.id ){
@@ -63,27 +64,13 @@ const BasicForms = ({match}) => {
       }))
       
    }
-  }, []);
+  }, [match.params.id]);
 
-  // const initVal ={
-  //   typeEssai:3,
-  //   institution:'',
-  //   latitude:'',
-  //   longitude:'',
-  //   altitude:'',
-  //   departement:'',
-  //   commune:'',
-  //   sectionCommunale:'',
-  //   commentaire:'',
-  //   motsCles:'',
-  //   pdf:'',
-
-  // }
   const [myFile, setMyFile] = useState({file:null});//for the file
-  const onFileChange = event => {
-    // Update the state
-    setMyFile({file: event.target.files[0]}); 
-    };
+  // const onFileChange = event => {
+  //   // Update the state
+  //   setMyFile({file: event.target.files[0]}); 
+  //   };
 const init = {
   typeEssai: {
     id:null
@@ -100,7 +87,7 @@ fichier: {
 motsCles: '',
 pdf:''
 }
-  const [dataForAPI = init, setDataForAPI, refDataForAPI] = useState();
+  const [dataForAPI = init, setDataForAPI] = useState();
   const dataForAPIref = useRef(dataForAPI);
   useEffect(
     () => { dataForAPIref.current = dataForAPI },
@@ -128,11 +115,13 @@ pdf:''
     isActive: false, status: '', message: '',})
 
   const validate = Yup.object({
-    typeEssai: Yup.string()
+    typeEssai: Yup.number()
       .max(45,"Maximum 45 caractères")
+      .min(1,"Faire un choix")
       .required("Champs obligatoire"),
-    institution: Yup.string()
+    institution: Yup.number()
       .max(45,"Maximum 45 caractères")
+      .min(1,"Faire un choix")
       .required("Champs obligatoire"),
     latitude: Yup.number("Entrer un nombre")
       .max(99999999,"Maximum 255 caractères")
@@ -305,7 +294,7 @@ const handleChange = (event) => {
     >
       { formik => (
         <div>
-       <Form>{console.log(initVal)}
+       <Form>
        { alert.isActive ?  <CAlert color="info" closeButton>{alert.message}</CAlert> : ''}
           <CRow>
             <CCol xs="12" sm="6">

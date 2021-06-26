@@ -69,7 +69,7 @@ import Test from "./Essai";
           </a>
             
           <CDataTable
-      items={data}
+      items={data ? data : null}
       fields={fields}
       columnFilter
       tableFilter

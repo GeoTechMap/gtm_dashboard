@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation, Link } from 'react-router-dom'
+
 import {
   CBadge,
-  CCard,
+ 
   CCardBody,
-  CCardHeader,
-  CCol,
+
   CDataTable,
-  CRow,
-  CPagination,
+
   CButton,
   CCollapse,
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 import User from "./User";
 
   const Users = () => {

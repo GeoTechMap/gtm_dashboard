@@ -1,5 +1,4 @@
 import React, { useState, createContext, useEffect } from "react";
-import useSwr from 'swr';
 
 // Create Context Object
 export const CounterContext = createContext();
