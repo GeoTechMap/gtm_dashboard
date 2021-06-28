@@ -1,5 +1,4 @@
-import React, { useState, createContext, useEffect } from "react";
-// import useSwr from 'swr';
+import React, { useState, createContext } from "react";
 
 // Create Context Object
 export const EssaiContext = createContext();
@@ -10,14 +9,7 @@ export const EssaiContextProvider = props => {
   const [globalData, setGlobalData] = useState({
     selectedEssai:{},
   });
-  // useEffect(() => {
-  //   fetch('http://localhost:8080/api/type_essais')
-  //     .then((response) => response.json())
-  //     .then((json) => setGlobalData(json)); 
-    
-  // }, []);
 
-  // const [count, setCount] = useState(0);
 
   return (
     <EssaiContext.Provider value={[globalData, setGlobalData]}>

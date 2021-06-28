@@ -63,16 +63,12 @@ const BasicForms = ({match}) => {
         nomFichier:json.fichier.nom
       })
       return json;})
-      .then((json)=>{
-        setAncienNomDuFichier(json.fichier.hashNomFichier)
-        return json;
-      })
-      .then((json)=>{ setMyFile({...myFile,
+      .then((json)=>{ setMyFile({
         file:{
           id:json.fichier.id,
-          name:json.fichier.nom,
-          type: json.fichier.format,
-          size:json.fichier.capacite
+          nom:json.fichier.nom,
+          format: json.fichier.format,
+          capacite:json.fichier.capacite
         }
         
       })
@@ -98,10 +94,10 @@ const BasicForms = ({match}) => {
            )
            .then((json)=>{setMyFile({
             file:{
-              id:data.fichier.id,
-              name:data.fichier.nom,
-              type: data.fichier.format,
-              size:data.fichier.capacite
+              id:json.fichier.id,
+              nom:json.fichier.nom,
+              format: json.fichier.format,
+              capacite:json.fichier.capacite
             }
             
           })})
@@ -159,7 +155,6 @@ pdf:''
     motsCles:'',
     pdf:'',
   });
-  const [anncienNomDuFichier, setAncienNomDuFichier] = useState('');
   const [dataForEdit, setDataForEdit] = useState(null);
   const [allTestTypes, setAllTestTypes] = useState([]);
   const [allInstitutions, setAllInstitutions] = useState([]);
@@ -266,8 +261,7 @@ const handleChange = (event) => {
               },
               commentaire:values.commentaire,
               motsCles: values.motsCles,
-              pdf:dataForAPI.pdf,
-              nomFichierASuprimmer:anncienNomDuFichier
+              pdf:dataForAPI.pdf
             })
             setDataForAPI((state) => {
               console.log(state); // "React is awesome!"
@@ -289,29 +283,16 @@ const handleChange = (event) => {
                 'Accept': 'application/json'},
                 body: JSON.stringify(dataForAPIref.current)
             };
-            console.log(dataForAPIref.current)
+            
             //check if it is POST or PUT
-            if(match.params.id){//_______________PUT RESQUEST________________
+            if(match.params.id){
               fetch(`http://localhost:8080/api/essais/`+match.params.id, requestOptions)
                 .then(response => response.json())
-                .then( essaiSaved => {
-                  fetch(`http://localhost:8081/api/file`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json',
-                    'Accept': 'application/json'},
-                    body: JSON.stringify({
-                      hashNomFichier: essaiSaved.fichier.hashNomFichier,
-                      nomFichierASuprimmer:anncienNomDuFichier,
-                      base64: dataForAPI.pdf
-                    })})
-                    .then(res => console.log(res))
-                  }
-                  )
                 .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.error('Error:', error);
                 });
-            }else{//_______________POST RESQUEST________________
+            }else{
               // console.log(requestOptions.body)
                 fetch(`http://localhost:8080/api/essais`, requestOptions)
                 .then(response => response.json())//to the app server
@@ -322,7 +303,6 @@ const handleChange = (event) => {
                     'Accept': 'application/json'},
                     body: JSON.stringify({
                       hashNomFichier: essaiSaved.fichier.hashNomFichier,
-                      nomFichierASuprimmer:"",//We dont delete any old doc
                       base64: dataForAPI.pdf
                     })})
                     .then(res => console.log(res))

@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
   CHeader,
   CToggler,
-  CHeaderBrand,
   CHeaderNav,
   CHeaderNavItem,
   CHeaderNavLink,

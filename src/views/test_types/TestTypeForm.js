@@ -23,7 +23,7 @@ const BasicForms = ({match}) => {
       .then((json) => setDataForEdit(json))
       
    }
-  }, []);
+  }, [match.params.id]);
 
   const initVal ={
     nom: '',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ErrorMessage, useField } from 'formik';
+import { useField } from 'formik';
 
 export const SearchTextField = ({label, type, options, ...props}) => {
     const [ field, meta] = useField(props);

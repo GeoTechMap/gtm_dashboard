@@ -66,7 +66,7 @@ import TestType from "./TestType";
           </a>
             
           <CDataTable
-      items={data}
+      items={data ? data : null}
       fields={fields}
       columnFilter
       tableFilter

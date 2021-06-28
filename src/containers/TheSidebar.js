@@ -12,10 +12,7 @@ import {
   CSidebarNavItem,
 } from '@coreui/react'
 
-import CIcon from '@coreui/icons-react'
 import logo from './target.svg';
-import Search from '../views/carte/Search';
-import { CounterContextProvider } from "../views/carte/EssaisContext";
 // sidebar nav config
 import navigation from './_nav'
 
