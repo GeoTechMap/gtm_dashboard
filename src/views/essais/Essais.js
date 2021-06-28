@@ -99,7 +99,7 @@ import Test from "./Essai";
           'typeEssai':
           (item)=>{
             return (
-              <td>{item.typeEssai.nom}</td>
+              <td>{item.typeEssai ? item.typeEssai.nom : ''}</td>
               )
           },
           'institution':

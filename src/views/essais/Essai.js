@@ -19,10 +19,11 @@ const Essai = (props) => {
           <CCardBody>
             <ul>
               <li>Type d'essai :
-                <Link 
+              {props.essai.typeEssai ?    <Link 
                 to={`/type_essais/edit/${props.essai.typeEssai.id}`} 
                 >{props.essai.typeEssai.nom}
-                </Link>
+                </Link> 
+                : ''}
               </li>
               <li>Institution :
                 <Link 
