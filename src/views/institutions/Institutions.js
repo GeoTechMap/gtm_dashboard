@@ -6,7 +6,7 @@ import {
   CCollapse,
 } from '@coreui/react'
 import Institution from "./Institution";
-
+import UserService from "../../../src/services/UserService";
   const Institutions = () => {
   const [details, setDetails] = useState([])
 
@@ -52,9 +52,15 @@ import Institution from "./Institution";
     }
   }
 
+  function bearerAuth(token) {
+    return `Bearer ${token}`
+  }
+
   const [data, setData] = useState([])
   useEffect(() => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`, {
+      headers: { 'Authorization': bearerAuth(UserService.getToken())}
+    })
       .then((response) => response.json())
       .then((json) => setData(json)); 
     

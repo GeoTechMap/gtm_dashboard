@@ -11,10 +11,18 @@ import {
   CFormGroup,
   CFormText,
   CRow,
-  CAlert
+  CAlert,
+  CBadge,
+  CToast,
+  CToastBody,
+  CToastHeader,
+  CToaster,
 } from '@coreui/react'
 
 const BasicForms = ({match}) => {
+  //__toaster
+  const [show, setShow] = useState(false)
+  //__end toaster
 
   useEffect(() => {
    if( match.params.id ){
@@ -46,6 +54,7 @@ const BasicForms = ({match}) => {
   })
   
   return (
+    <div>
     <Formik
       initialValues = {
         dataForEdit || initVal
@@ -64,16 +73,20 @@ const BasicForms = ({match}) => {
         if(match.params.id){
           fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
             .then(response => response.json())
-            .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+            .then(() => setShow(true))
+            // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }else{
             fetch(`http://localhost:8080/api/type_essais/`, requestOptions)
             .then(response => response.json())
-            .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+            .then(() => setShow(true))
+            // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
           }
-
-            setTimeout(() => {
-              setAlert({...alert, isActive: false, message:''})
-            }, 4000)
+          setTimeout(() => {
+            setShow(false)
+          }, 3000)
+            // setTimeout(() => {
+            //   setAlert({...alert, isActive: false, message:''})
+            // }, 4000)
       }}
     >
       { formik => (
@@ -124,6 +137,26 @@ const BasicForms = ({match}) => {
       )
       }
     </Formik>   
+
+<CCol sm="12" lg="6">
+<CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={show}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Opération réussie !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+</CCol>
+</div>
   )
 }
 export default BasicForms
