@@ -12,11 +12,18 @@ import {
   CFormText,
   CRow,
   CAlert,
-  CLabel
+  CLabel,
+  CBadge,
+  CToast,
+  CToastBody,
+  CToastHeader,
+  CToaster,
 } from '@coreui/react'
 
 const BasicForms = ({match}) => {
-
+//__toaster
+const [show, setShow] = useState(false)
+//__end toaster
   useEffect(() => {
 
     //__START fetch all test types for the select field
@@ -222,6 +229,7 @@ const handleChange = (event) => {
 };
 
   return (
+    <div>
     <Formik
       initialValues = {
         dataForEdit || initVal
@@ -232,6 +240,9 @@ const handleChange = (event) => {
         function first(){
           return new Promise(function(resolve, reject){
               console.log("First");
+              if(!dataForAPI.pdf){
+                alert('Noooooo')
+              }
               // toBase64(myFile.file, (base64String)=>{
               // })
               resolve();
@@ -307,7 +318,8 @@ const handleChange = (event) => {
                     .then(res => console.log(res))
                   }
                   )
-                .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
+                  .then(() => setShow(true))
+                //.then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.error('Error:', error);
                 });
@@ -329,8 +341,8 @@ const handleChange = (event) => {
                   }
                   )
                   
-              
-                .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
+                  .then(() => setShow(true))
+               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.error('Error:', error);
                 });
@@ -353,10 +365,14 @@ const handleChange = (event) => {
       .then(second)
       .then(third);
 
-     
-            setTimeout(() => {
-              setAlert({...alert, isActive: false, message:''})
-            }, 4000)
+
+
+      setTimeout(() => {
+        setShow(false)
+      }, 3000)
+            // setTimeout(() => {
+            //   setAlert({...alert, isActive: false, message:''})
+            // }, 4000)
       }}
     >
       { formik => (
@@ -468,7 +484,26 @@ const handleChange = (event) => {
         </div>    
       )
       }
-    </Formik>   
+    </Formik>  
+     <CCol sm="12" lg="6">
+     <CToaster
+       position={'top-right'}
+     > 
+           <CToast
+             show={show}
+             autohide={true && 4000}
+             fade={true}
+           >
+             <CToastHeader closeButton={true}>
+             <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+             </CToastHeader>
+             <CToastBody  color="success">
+               Opération réussie !
+             </CToastBody>
+           </CToast>
+     </CToaster>
+ </CCol>
+ </div> 
   )
 }
 export default BasicForms

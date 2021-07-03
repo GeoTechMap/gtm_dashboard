@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-// import { EssaiContext } from "../../EssaisContext";
+import React, { useState, useEffect, useContext } from 'react';
 
 import SinglePagePDFViewer from "./single-page";
-// import AllPagesPDFViewer from "./all-pages";
+import AllPagesPDFViewer from "./all-pages";
 import "./styles.css";
 
 const LoadFromBase64Example = ({match}) => {
-    // const [globalData, setGlonbalData] = useContext(EssaiContext);
 
 
     const [data, setData] = useState({})
@@ -33,7 +31,7 @@ const LoadFromBase64Example = ({match}) => {
       
         
       
-    }, [match.params.id]);
+    }, []);
  
     return (
         // <div  >{console.log(globalData)}

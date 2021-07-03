@@ -2,9 +2,12 @@
   "realm": "GTM",
   "auth-server-url": "http://localhost:8090/auth/",
   "ssl-required": "external",
-  "resource": "react-app",
+  "resource": "gtm_app",
   "public-client": true,
   "verify-token-audience": true,
   "use-resource-role-mappings": true,
-  "confidential-port": 0
+  "confidential-port": 0,
+  "credentials": {
+    "secret": "888f424b-f89e-4841-b1ea-839296581ab1"
+  }
 }
