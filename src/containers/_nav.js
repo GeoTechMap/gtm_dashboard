@@ -12,12 +12,12 @@ const _nav =  [
     _tag: 'CSidebarNavTitle',
     _children: ['Menu']
   },
-  // {
-  //   _tag: 'CSidebarNavItem',
-  //   name: 'Utilisateurs',
-  //   to: '/users',
-  //   icon: 'cil-user',
-  // },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Utilisateurs',
+    to: '/utilisateurs',
+    icon: 'cil-user',
+  },
   {
     _tag: 'CSidebarNavItem',
     name: 'Institutions',

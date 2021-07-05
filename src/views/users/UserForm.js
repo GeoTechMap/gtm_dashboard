@@ -1,185 +1,245 @@
-// import React ,{useState, useEffect} from 'react'
-// import {
-//   CButton,
-//   CCard,
-//   CCardBody,
-//   CCardFooter,
-//   CCardHeader,
-//   CCol,
+import React ,{useState, useEffect, useRef} from 'react'
+import {Formik, Form} from 'formik';
+import { TextField } from '../commun/TextField';
+import * as Yup from 'yup';
+import {
+  CCard,
+  CCardBody,
+  CCardFooter,
+  CCardHeader,
+  CCol,
+  CFormGroup,
+  CFormText,
+  CRow,
+  CAlert,
+  CBadge,
+  CToast,
+  CToastBody,
+  CToastHeader,
+  CToaster,
+} from '@coreui/react'
+import UserService from "../../../src/services/UserService";
 
-//   CForm,
-//   CFormGroup,
-//   CFormText,
+const UserForm = ({match}) => {
+  //__toaster
+    const [show, setShow] = useState(false)
+  //__end toaster
 
-//   CInput,
+  useEffect(() => {
+    //__START fetch all test types for the select field
+    fetch(`http://localhost:8080/api/type_essais/`)
+    .then((response) => response.json())
+    .then((json) => {
+    setAllTestTypes(json)
+    return json;})
+//__END fetch all test types for the select field
+    //__START fetch all test types for the select field
+    fetch(`http://localhost:8080/api/institutions/`)
+    .then((response) => response.json())
+    .then((json) =>{ 
+      setAllInstitutions(json)
+      return json;})
+//__END fetch all test types for the select field
 
-//   CInputGroup,
-//   CInputGroupAppend,
-
-//   CInputGroupText,
-//   CLabel,
-//   CSelect,
-//   CRow,
-//   CAlert
-// } from '@coreui/react'
-// import CIcon from '@coreui/icons-react'
-
-// const BasicForms = ({match}) => {
-//   //to know if the form is for create (return false) or for edit (return true)
-//   const [isEdit] = React.useState(false);
-//   // const { id } = match.params;
-//   useEffect(() => {
-//    if( match.params.id ){
-//     fetch("http://localhost:8080/api/users/"+match.params.id)
-//       .then((response) => response.json())
-//       .then((json) => setInputValues(json))
-//    }
- 
-    
-//   }, []);
-
-//   const [inputValues, setInputValues] = useState({
-//     firstName: '', lastName: '', password: '', email: '', role: '1', sexe: '0', phone: '', address: '', institution: ''
-//   });
-  
-//   const handleOnChange = event => {
-//     const { name, value } = event.target;
-//     setInputValues({ ...inputValues, [name]: value });
-//   };
-//   const onReinitialiserInput = () =>{
-//     setInputValues({
-//       firstName: '', lastName: '', password: '', email: '', role: '1', sexe: '0', phone: '', address: '', institution: ''
-//     })
-//   }
-
-//   const [alert, setAlert] = React.useState({ 
-//     isActive: false, status: '', message: '',})
-//    const handleSubmit = (evt) => {
-//       evt.preventDefault();
-//       //VALIDATION
-//       const requestOptions = {
-//         method: match.params.id ?'PUT':'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify(inputValues)
-//     };
-//     //check if it is POST or PUT
-//     if(match.params.id){
-//       fetch('http://localhost:8080/api/users/'+match.params.id, requestOptions)
-//         .then(response => response.json())
-//         .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
-//     }else{
-//         fetch('http://localhost:8080/api/users/', requestOptions)
-//         .then(response => response.json())
-//         .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
-//       }
-
-//         setTimeout(() => {
-//           setAlert({...alert, isActive: false, message:''})
-//         }, 4000)
-//   }
-
-//   return (
-//     <>
-//           <form onSubmit={handleSubmit}>
-//             { alert.isActive ?  <CAlert color="info" closeButton>{alert.message}</CAlert> : ''}
-         
-//       <CRow>
-  
-//         <CCol xs="12" sm="6">
-//         <CCard>
-//             <CCardHeader>
-//               Informations de l'utilisateur   {  match.params.id}
-//             </CCardHeader>
-//             <CCardBody>
-//               <CForm >
-//                 <CFormGroup>
-//                   <CLabel >Prénom</CLabel>
-//                   <CInput type="text" onChange={handleOnChange} value={inputValues.firstName} name="firstName" placeholder="Entrer le prénom.." autoComplete="prenom"/>
-//                   <CFormText className="help-block">Veillez entrer le prénom</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel >Nom</CLabel>
-//                   <CInput type="text" onChange={handleOnChange} value={inputValues.lastName} name="lastName" placeholder="Entrer le nom.." autoComplete="nom"/>
-//                   <CFormText className="help-block">Veillez entrer le nom</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel >Email</CLabel>
-//                   <CInput type="email" onChange={handleOnChange} value={inputValues.email} name="email" placeholder="Enter Email.." autoComplete="email"/>
-//                   <CFormText className="help-block">Veillez entrer l'email</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel >Télṕhone</CLabel>
-//                   <CInput type="text" onChange={handleOnChange} value={inputValues.phone} name="phone" placeholder="Entrer le téléphone.." autoComplete="phone"/>
-//                   <CFormText className="help-block">Veillez entrer le téléphone</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel >Addresse</CLabel>
-//                   <CInput type="text" onChange={handleOnChange} value={inputValues.adress} name="adress" placeholder="Entrer l'addresse.." autoComplete="adress"/>
-//                   <CFormText className="help-block">Veillez entrer l'adresse</CFormText>
-//                 </CFormGroup>
-              
-//               </CForm>
-//             </CCardBody>
-//           </CCard>
-//         </CCol>
-//         <CCol xs="12" sm="6">
-//           <CCard>
-//             <CCardHeader>
-//             Informations de l'utilisateur
-//             </CCardHeader>
-//             <CCardBody>
-//                 <CFormGroup>
-//                   <CLabel>Mot de passe</CLabel>
-//                   <CInput type="password" onChange={handleOnChange} name="password" placeholder="Enter Password.." autoComplete="current-password"/>
-//                   <CFormText className="help-block">Veuillez entre un mot de passe</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel>Confirmer mot de passe</CLabel>
-//                   <CInput type="password" onChange={handleOnChange} name="confirm_password" placeholder="Enter Password.." autoComplete="current-password"/>
-//                   <CFormText className="help-block">Veuillez confirmer le mot de passe</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                 <CLabel>Sexe</CLabel>
-//                     <CSelect custom onChange={handleOnChange} name="sexe" >
-//                       <option value="0"selected={inputValues.sexe == '0'}>Homme</option>
-//                       <option value="1" selected={inputValues.sexe == '1'}>Femme</option>
-//                       <option value="2" selected={inputValues.sexe == '2'}>Autre</option>
-//                     </CSelect>
-//                     <CFormText className="help-block">Choisir le sexe</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                 <CLabel>Rôle</CLabel>
-//                     <CSelect custom onChange={handleOnChange} name="role" >
-//                       <option value="1">Admin</option>
-//                       <option value="0">Super Admin</option>
-//                     </CSelect>
-//                     <CFormText className="help-block">Choisir le rôle</CFormText>
-//                 </CFormGroup>
-//                 <CFormGroup>
-//                   <CLabel>Institution</CLabel>
-//                   <CInputGroup>
-//                     <CSelect custom onChange={handleOnChange} name="institution" >
-//                       <option value="0">URGéo</option>
-//                       <option value="1">BME</option>
-//                       <option value="2">LNBTP</option>
-//                     </CSelect>
-//                     <CInputGroupAppend>
-//                       <CInputGroupText><CIcon name="cil-scrubber" /></CInputGroupText>
-//                     </CInputGroupAppend>
-//                   </CInputGroup>
-//                 </CFormGroup>
-//             </CCardBody>
-//             <CCardFooter>
-//               <CButton type="submit" size="sm" color="primary"><CIcon name="cil-scrubber" /> {match.params.id ? 'Modifier': 'Enregistrer'} </CButton>
-//               <CButton type="reset" size="sm" color="danger" onClick={() => onReinitialiserInput()}><CIcon name="cil-ban" /> Réinitialiser</CButton>
-//             </CCardFooter>
-//           </CCard>
-//         </CCol>
+   if( match.params.id ){
+    fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id)
+      .then((response) => response.json())
+      .then((json) => setDataForEdit(json.utilisateurDto))
       
-//       </CRow>
-//       </form>
-//      </>
-//   )
-// }
+   }
+  }, [match.params.id]);
 
-// export default BasicForms
+  const initVal ={
+    nom: '',
+    prenom:'',
+    username:'',
+    email:'',
+    adresse:'',
+    telephone:'',
+    institution:'',
+  }
+  const [allTestTypes, setAllTestTypes] = useState([]);
+  const [allInstitutions, setAllInstitutions] = useState([]);
+  const [dataForEdit, setDataForEdit] = useState(null);
+  const [alert, setAlert] = React.useState({ 
+    isActive: false, status: '', message: '',})
+
+const init ={
+    nom: '',
+    prenom:'',
+    username:'',
+    email:'',
+    adresse:'',
+    telephone:'',
+    institution: {
+        id:null
+    },
+    }
+const [dataForAPI = init, setDataForAPI] = useState();
+
+  const validate = Yup.object({
+    nom: Yup.string()
+    .max(100,"Maximum 100 caractères")
+    .required("Champs obligatire"),
+    prenom: Yup.string()
+    .max(45,"Maximum 45 caractères"),
+    adresse: Yup.string()
+    .max(45,"Maximum 45 caractères")
+    .required("Champs obligatire"),
+    telephone: Yup.string()
+      .max(15,"Maximum 15 caractères")
+      .required("Champs obligatire"),
+    email: Yup.string()
+      .email("Email invalide")
+      .required("Champs obligatire"),
+    username: Yup.string()
+      .max(45,"Maximum 45 caractères")
+      .min(1,"Faire un choix")
+      .required("Champs obligatoire"),
+    institution: Yup.number()
+      .min(1,"Faire un choix")
+      .required("Champs obligatoire"),
+        
+  })
+  
+  return (
+    <div>
+    <Formik
+      initialValues = {
+        dataForEdit || initVal
+      }
+      enableReinitialize
+      validationSchema= {validate}
+      onSubmit={values => {
+         
+                const requestOptions = {
+                    method: match.params.id ?'PUT':'POST',
+                    headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${UserService.getToken()}`},
+                    body: JSON.stringify( {
+                        id:match.params.id ? dataForEdit.id : null,
+                        nom:values.nom,
+                        idKeycloak:'plplp',
+                        prenom:values.prenom,
+                        adresse:values.adresse,
+                        telephone:values.telephone,
+                        email:values.email,
+                        username:values.username,
+                        institution:{
+                            id:values.institution
+                        }
+                    })
+
+                };
+                  //check if it is POST or PUT
+        if(match.params.id){
+            fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id, requestOptions)
+              .then(response => response.json())//to do:TEST IF SUCCES first
+              .then(() => setShow(true))
+              // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+          }else{
+              fetch(`http://localhost:8080/api/utilisateurs/`, requestOptions)
+              .then(response => response.json())
+              // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+              .then(() => setShow(true))
+            }
+              
+        
+      
+
+            setTimeout(() => {
+              setShow(false)
+            }, 3000)
+      }}
+    >
+      { formik => (
+        <div>
+       <Form>
+       { alert.isActive ?  <CAlert color="info" closeButton>{alert.message}</CAlert> : ''}
+       <CRow>
+            <CCol xs="12" sm="6">
+              <CCard>
+                  <CCardHeader>
+                  Informations sur l'utilisateur   {  match.params.id}
+                 </CCardHeader>
+                    <CCardBody>
+                      <CFormGroup>
+                          <TextField label="Nom*:" name="nom" 
+                          type="text" placeholder="Entrer le nom de l'utilisateur..." 
+                          autoComplete="nom" 
+                          />
+                          <CFormText className="help-block">Veuillez entrer le nom de l'utilisateur</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                          <TextField label="Prénom:" name="prenom" 
+                          type="text" placeholder="Entrer le prénom de l'utilisateur..." 
+                          autoComplete="sigle" 
+                          />
+                          <CFormText className="help-block">Veuillez entrer le prénom de l'utilisateur</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                        <TextField label="Adresse*:" name="adresse" type="text" placeholder="Entrer l'adresse de l'institution.." autoComplete="adresse"/>
+                        <CFormText className="help-block">Veuillez entrer l'adresse de l'utilisateur</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                        <TextField label="Téléphone:" name="telephone" type="text" placeholder="Entrer un numéro de téléphone..." autoComplete="telephone1"/>
+                        <CFormText className="help-block">Veuillez entrer le numéro de téléphone de l'utilisateur</CFormText>
+                      </CFormGroup>
+                    </CCardBody>
+              </CCard>
+            </CCol>
+            <CCol xs="12" sm="6">
+              <CCard> 
+                  <CCardHeader>
+                  Informations sur l'utilisateur   {  match.params.id}
+                 </CCardHeader>
+                    <CCardBody>
+                      <CFormGroup>
+                        <TextField label="Email*:" name="email" type="text" placeholder="Enter l'email de l'utilisateur..." autoComplete="email"/>
+                        <CFormText className="help-block">Veuillez entrer l'email de l'utilisateur</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                          <TextField  label="Nom d'utilisateur*:" name="username" 
+                          type="selectString" options={allInstitutions} placeholder="Entrer le type d'essai..."/>
+                          <CFormText className="help-block">Veuillez entrer le type d'essai</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                        <TextField label="Institution*:" name="institution" 
+                         type="select" options={allInstitutions} placeholder="Entrer l'institution" />
+                        <CFormText className="help-block">Veuillez entrer l'institution</CFormText>
+                      </CFormGroup>
+                    </CCardBody>
+                    <CCardFooter>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
+                    </CCardFooter>
+              </CCard>
+            </CCol>
+          </CRow>
+       </Form>
+        </div>    
+      )
+      }
+    </Formik>   
+    <CCol sm="12" lg="6">
+      <CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={show}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Opération réussie !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+  </CCol>
+  </div>
+  )
+}
+export default UserForm

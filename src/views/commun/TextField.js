@@ -23,6 +23,15 @@ export const TextField = ({label, type, options, ...props}) => {
                     return <option key={key} value={option.id}>{option.nom}</option>
                     })}      
             </CSelect>:
+            type === "selectString" ?
+            <CSelect name={label}
+            className={`form-control shadow-none ${meta.touched && meta.error && 'is-invalid' }`}
+            {...field} {...props}>
+                <option  value={0}>Choisir</option>
+                 { options.map((option, key) => {              
+                    return <option key={key} value={option.nom}>{option.nom}</option>
+                    })}      
+            </CSelect>:
         //     type == "file" ?
         //     <CCol xs="12" md="12">
         //      <CInputFile custom id="custom-file-input" />

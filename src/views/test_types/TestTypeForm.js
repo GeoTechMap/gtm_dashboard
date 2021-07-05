@@ -17,7 +17,8 @@ import {
   CToastBody,
   CToastHeader,
   CToaster,
-} from '@coreui/react'
+} from '@coreui/react';
+import UserService from "../../../src/services/UserService";
 
 const BasicForms = ({match}) => {
   //__toaster
@@ -28,7 +29,7 @@ const BasicForms = ({match}) => {
    if( match.params.id ){
     fetch(`http://localhost:8080/api/type_essais/`+match.params.id)
       .then((response) => response.json())
-      .then((json) => setDataForEdit(json))
+      .then((json) => setDataForEdit(json.typeEssaiDto))
       
    }
   }, [match.params.id]);
@@ -65,7 +66,8 @@ const BasicForms = ({match}) => {
        console.log(values)
           const requestOptions = {
             method: match.params.id ?'PUT':'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+            'Authorization': `Bearer ${UserService.getToken()}` },
             body: JSON.stringify(values)
         };
         

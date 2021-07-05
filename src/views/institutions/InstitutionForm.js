@@ -29,7 +29,7 @@ const BasicForms = ({match}) => {
    if( match.params.id ){
     fetch(`http://localhost:8080/api/institutions/`+match.params.id)
       .then((response) => response.json())
-      .then((json) => setDataForEdit(json))
+      .then((json) => setDataForEdit(json.institutionDto))
       
    }
   }, [match.params.id]);

@@ -18,7 +18,8 @@ import {
   CToastBody,
   CToastHeader,
   CToaster,
-} from '@coreui/react'
+} from '@coreui/react';
+import UserService from "../../../src/services/UserService";
 
 const BasicForms = ({match}) => {
 //__toaster
@@ -175,11 +176,11 @@ pdf:''
 
   const validate = Yup.object({
     typeEssai: Yup.number()
-      .max(45,"Maximum 45 caractères")
+      .max(99999999,"Maximum 45 caractères")
       .min(1,"Faire un choix")
       .required("Champs obligatoire"),
     institution: Yup.number()
-      .max(45,"Maximum 45 caractères")
+      .max(99999999,"Maximum 45 caractères")
       .min(1,"Faire un choix")
       .required("Champs obligatoire"),
     latitude: Yup.number("Entrer un nombre")
@@ -241,7 +242,7 @@ const handleChange = (event) => {
           return new Promise(function(resolve, reject){
               console.log("First");
               if(!dataForAPI.pdf){
-                alert('Noooooo')
+                //alert('Noooooo')
               }
               // toBase64(myFile.file, (base64String)=>{
               // })
@@ -297,7 +298,8 @@ const handleChange = (event) => {
               const requestOptions = {
                 method: match.params.id ?'PUT':'POST',
                 headers: { 'Content-Type': 'application/json',
-                'Accept': 'application/json'},
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${UserService.getToken()}`},
                 body: JSON.stringify(dataForAPIref.current)
             };
             console.log(dataForAPIref.current)
@@ -311,7 +313,7 @@ const handleChange = (event) => {
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},
                     body: JSON.stringify({
-                      hashNomFichier: essaiSaved.fichier.hashNomFichier,
+                      hashNomFichier: essaiSaved.essaiDto.fichier.hashNomFichier,
                       nomFichierASuprimmer:anncienNomDuFichier,
                       base64: dataForAPI.pdf
                     })})
@@ -333,7 +335,7 @@ const handleChange = (event) => {
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},
                     body: JSON.stringify({
-                      hashNomFichier: essaiSaved.fichier.hashNomFichier,
+                      hashNomFichier: essaiSaved.essaiDto.fichier.hashNomFichier,
                       nomFichierASuprimmer:"",//We dont delete any old doc
                       base64: dataForAPI.pdf
                     })})
