@@ -29,7 +29,7 @@ export const TextField = ({label, type, options, ...props}) => {
             {...field} {...props}>
                 <option  value={0}>Choisir</option>
                  { options.map((option, key) => {              
-                    return <option key={key} value={option.nom}>{option.nom}</option>
+                    return <option key={key} value={option}>{option}</option>
                     })}      
             </CSelect>:
         //     type == "file" ?

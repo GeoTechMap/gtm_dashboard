@@ -19,6 +19,7 @@ import {
   CToaster,
 } from '@coreui/react'
 import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const UserForm = ({match}) => {
   //__toaster
@@ -27,7 +28,7 @@ const UserForm = ({match}) => {
 
   useEffect(() => {
     //__START fetch all test types for the select field
-    fetch(`http://localhost:8080/api/type_essais/`)
+    fetch(`http://localhost:8080/api/keycloakusers/`)
     .then((response) => response.json())
     .then((json) => {
     setAllTestTypes(json)
@@ -44,7 +45,16 @@ const UserForm = ({match}) => {
    if( match.params.id ){
     fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id)
       .then((response) => response.json())
-      .then((json) => setDataForEdit(json.utilisateurDto))
+      .then((json) => setDataForEdit(
+        {
+          nom: json.utilisateurDto.nom,
+          prenom:json.utilisateurDto.prenom,
+          username:json.utilisateurDto.username,
+          email:json.utilisateurDto.email,
+          adresse:json.utilisateurDto.adresse,
+          telephone:json.utilisateurDto.telephone,
+          institution:json.utilisateurDto.institution.id,
+        }))
       
    }
   }, [match.params.id]);
@@ -80,14 +90,18 @@ const [dataForAPI = init, setDataForAPI] = useState();
   const validate = Yup.object({
     nom: Yup.string()
     .max(100,"Maximum 100 caractères")
+    .min(3,"3 caractères au minimum")
     .required("Champs obligatire"),
     prenom: Yup.string()
-    .max(45,"Maximum 45 caractères"),
+    .max(45,"Maximum 45 caractères")
+    .min(3,"3 caractères au minimum"),
     adresse: Yup.string()
     .max(45,"Maximum 45 caractères")
+    .min(3,"3 caractères au minimum")
     .required("Champs obligatire"),
     telephone: Yup.string()
       .max(15,"Maximum 15 caractères")
+      .min(3,"3 caractères au minimum")
       .required("Champs obligatire"),
     email: Yup.string()
       .email("Email invalide")
@@ -102,6 +116,8 @@ const [dataForAPI = init, setDataForAPI] = useState();
         
   })
   
+  const [loadingState, setLoadingState] = useState(false);
+  
   return (
     <div>
     <Formik
@@ -111,7 +127,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
-         
+        setLoadingState(true);
                 const requestOptions = {
                     method: match.params.id ?'PUT':'POST',
                     headers: { 'Content-Type': 'application/json',
@@ -136,12 +152,22 @@ const [dataForAPI = init, setDataForAPI] = useState();
             fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id, requestOptions)
               .then(response => response.json())//to do:TEST IF SUCCES first
               .then(() => setShow(true))
+              .then(() => setLoadingState(false))
+              .catch((error) => {
+                console.log(error);
+                setLoadingState(false);
+              })
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
           }else{
               fetch(`http://localhost:8080/api/utilisateurs/`, requestOptions)
               .then(response => response.json())
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
               .then(() => setShow(true))
+              .then(() => setLoadingState(false))
+              .catch((error) => {
+                console.log(error);
+                setLoadingState(false);
+              })
             }
               
         
@@ -200,8 +226,8 @@ const [dataForAPI = init, setDataForAPI] = useState();
                       </CFormGroup>
                       <CFormGroup>
                           <TextField  label="Nom d'utilisateur*:" name="username" 
-                          type="selectString" options={allInstitutions} placeholder="Entrer le type d'essai..."/>
-                          <CFormText className="help-block">Veuillez entrer le type d'essai</CFormText>
+                          type="selectString" options={allTestTypes}/>
+                          <CFormText className="help-block">Veuillez choisir le nom d'utilisateur</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Institution*:" name="institution" 
@@ -210,7 +236,9 @@ const [dataForAPI = init, setDataForAPI] = useState();
                       </CFormGroup>
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} 
+                      <ClipLoader loading={loadingState} size={15} />
+                      </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
                     </CCardFooter>
               </CCard>

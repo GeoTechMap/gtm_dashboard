@@ -20,6 +20,7 @@ import {
   CToaster,
 } from '@coreui/react';
 import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BasicForms = ({match}) => {
 //__toaster
@@ -229,6 +230,8 @@ const handleChange = (event) => {
   });
 };
 
+const [loadingState, setLoadingState] = useState(false);
+
   return (
     <div>
     <Formik
@@ -323,8 +326,9 @@ const handleChange = (event) => {
                   .then(() => setShow(true))
                 //.then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
-                  console.error('Error:', error);
-                });
+                  console.log(error);
+                  setLoadingState(false);
+                })
             }else{//_______________POST RESQUEST________________
               // console.log(requestOptions.body)
                 fetch(`http://localhost:8080/api/essais`, requestOptions)
@@ -345,9 +349,10 @@ const handleChange = (event) => {
                   
                   .then(() => setShow(true))
                // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
-                .catch((error) => {
-                  console.error('Error:', error);
-                });
+               .catch((error) => {
+                console.log(error);
+                setLoadingState(false);
+              })
                 // fetch(`${process.env.REACT_APP_API_URL}/api/essais`,
                 //   {
                 //     method: 'POST',
@@ -476,7 +481,9 @@ const handleChange = (event) => {
                     </CFormGroup>   :''}
                      
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'}
+                      <ClipLoader loading={loadingState} size={15} />
+                      </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
                     </CCardFooter>
               </CCard>

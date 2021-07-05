@@ -39,6 +39,11 @@ const getUsername = () => _kc.tokenParsed?.preferred_username;
 
 const hasRole = (roles) => roles.some((role) => _kc.hasRealmRole(role));
 
+const getConnectedUser = () =>fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/search?username=${getUsername()}`)
+  .then((response) => response.json())
+  // .then((json)=> user=json)
+
+
 const UserService = {
   initKeycloak,
   doLogin,
@@ -48,6 +53,7 @@ const UserService = {
   updateToken,
   getUsername,
   hasRole,
+  getConnectedUser,
 };
 
 export default UserService;

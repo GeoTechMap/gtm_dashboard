@@ -7,6 +7,8 @@ import {
 } from '@coreui/react'
 import User from "./User";
 import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
+
   const Utilisateurs = () => {
   const [details, setDetails] = useState([])
 
@@ -59,18 +61,27 @@ import UserService from "../../../src/services/UserService";
 
   const [data, setData] = useState([])
   useEffect(() => {
+    setLoadingState(true);
+
     fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/`, {
       headers: { 'Authorization': bearerAuth(UserService.getToken())}
     })
       .then((response) => response.json())
-      .then((json) => setData(json)); 
+      .then((json) => setData(json))
+      .then(() => setLoadingState(false))
+      .catch((error) => {
+        console.log(error);
+        setLoadingState(false);
+      }); 
     
   }, []);
 
+  const [loadingState, setLoadingState] = useState(false);
   return (
     <div>
           <a href="/#/utilisateurs/create" >   
             <CButton variant="outline" color="success">Ajouter</CButton>
+            <ClipLoader loading={loadingState} size={25} />
           </a>
             
           <CDataTable

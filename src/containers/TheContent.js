@@ -7,7 +7,8 @@ import {
 import { CContainer, CFade } from '@coreui/react'
 
 // routes config
-import routes from '../routes'
+import routes from '../routes';
+import UserService from "../services/UserService";
   
 const loading = (
   <div className="pt-3 text-center">
@@ -28,14 +29,16 @@ const TheContent = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={props => (
+                  render={props => UserService.hasRole(route.roles) ?(
                     <CFade>
                       <route.component {...props} />
                     </CFade>
-                  )} />
+                  ):
+                  <Redirect from="/" to="/dashboard" />
+                } />
               )
             })}
-            <Redirect from="/" to="/dashboard" />
+            <Redirect from="/" to="/404" />
           </Switch>
         </Suspense>
       </CContainer>

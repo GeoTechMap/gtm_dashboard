@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import {
   CCardBody,
   CDataTable,
@@ -6,8 +6,11 @@ import {
   CCollapse,
 } from '@coreui/react'
 import Test from "./Essai";
+import ClipLoader from "react-spinners/ClipLoader";
+import { EssaiContext } from "../../EssaisContext";
 
   const Essais = () => {
+    const [globalData, setGlobalData] = useContext(EssaiContext);
   const [details, setDetails] = useState([])
 
   const toggleDetails = (index,id) => {
@@ -56,17 +59,37 @@ import Test from "./Essai";
   
   const [data, setData] = useState([])
   useEffect(() => {
+    setLoadingState(true);
+
     fetch(`${process.env.REACT_APP_API_URL}/api/essais/`)
       .then((response) => response.json())
-      .then((json) => setData(json)); 
+      .then((json) => setData(json))
+      .then(() => setLoadingState(false))
+      .catch((error) => {
+        console.log(error);
+        setLoadingState(false);
+      }); 
     
   }, []);
+
+  const [loadingState, setLoadingState] = useState(false);
+
+ 
+    //  const getInstitutionOfActualUser = () =>{
+    //   //   var idIns;
+    //     fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/search?username=${UserService.getUsername()}`)
+    //   .then((response) => response.json())
+    //   //   return idIns;   // The function returns the product of p1 and p2
+
+    //   }
+  
 
   return (
     <div>
           <a href="/#/tests/create" >   
             <CButton variant="outline" color="success">Ajouter</CButton>
-          </a>
+            <ClipLoader loading={loadingState} size={25} />
+         </a>
             
           <CDataTable
       items={data ? data : null}
@@ -155,9 +178,14 @@ import Test from "./Essai";
                       Modifier
                     </CButton>
                   </a>
-                  <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.id)}}>
-                    Supprimmer
-                  </CButton>
+                  {/* seulement le créateur de l'essai peut le supprimer. */}
+                 
+                  {globalData.connectedUser.institution.id == item.institution.id ?
+                    <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.id)}}>
+                      Supprimmer
+                      {console.log(globalData.connectedUser.institution.id+ '@' + item.institution.id )}
+                    </CButton>
+                   :'' }
                 </CCardBody>
               </CCollapse>
             )

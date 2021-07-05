@@ -19,6 +19,7 @@ import {
   CToaster,
 } from '@coreui/react';
 import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BasicForms = ({match}) => {
   //__toaster
@@ -53,6 +54,8 @@ const BasicForms = ({match}) => {
       .max(255,"Maximum 255 caractères"),
         
   })
+
+  const [loadingState, setLoadingState] = useState(false);
   
   return (
     <div>
@@ -128,7 +131,9 @@ const BasicForms = ({match}) => {
                       </CFormGroup>      
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} 
+                      <ClipLoader loading={loadingState} size={15} />
+                     </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
                     </CCardFooter>
               </CCard>
