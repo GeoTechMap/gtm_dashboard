@@ -29,7 +29,7 @@ const _nav = {
       _tag: 'CSidebarNavItem',
       name: 'Types d\'essai',
       to: '/test_types',
-      icon: 'cil-home',
+      icon: 'cil-pencil',
     },
 
   ],
@@ -48,7 +48,7 @@ const _nav = {
       _tag: 'CSidebarNavItem',
       name: 'Essais',
       to: '/tests',
-      icon: 'cil-home',
+      icon: 'cil-map',
     },
   ],
   operateur:[
@@ -66,7 +66,7 @@ const _nav = {
       _tag: 'CSidebarNavItem',
       name: 'Essais',
       to: '/tests',
-      icon: 'cil-home',
+      icon: 'cil-map',
     },
   ],
 

@@ -23,7 +23,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const UserForm = ({match}) => {
   //__toaster
-    const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
+  const [showError, setShowError] = useState(false);
   //__end toaster
 
   useEffect(() => {
@@ -31,7 +32,7 @@ const UserForm = ({match}) => {
     fetch(`http://localhost:8080/api/keycloakusers/`)
     .then((response) => response.json())
     .then((json) => {
-    setAllTestTypes(json)
+    setAllKeycloalUserWithoutProfile(json)
     return json;})
 //__END fetch all test types for the select field
     //__START fetch all test types for the select field
@@ -68,7 +69,7 @@ const UserForm = ({match}) => {
     telephone:'',
     institution:'',
   }
-  const [allTestTypes, setAllTestTypes] = useState([]);
+  const [allKeycloalUserWithoutProfile, setAllKeycloalUserWithoutProfile] = useState([]);
   const [allInstitutions, setAllInstitutions] = useState([]);
   const [dataForEdit, setDataForEdit] = useState(null);
   const [alert, setAlert] = React.useState({ 
@@ -155,6 +156,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
               .then(() => setLoadingState(false))
               .catch((error) => {
                 console.log(error);
+                setShowError(true);
                 setLoadingState(false);
               })
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
@@ -166,6 +168,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
               .then(() => setLoadingState(false))
               .catch((error) => {
                 console.log(error);
+                setShowError(true)
                 setLoadingState(false);
               })
             }
@@ -224,9 +227,9 @@ const [dataForAPI = init, setDataForAPI] = useState();
                         <TextField label="Email*:" name="email" type="text" placeholder="Enter l'email de l'utilisateur..." autoComplete="email"/>
                         <CFormText className="help-block">Veuillez entrer l'email de l'utilisateur</CFormText>
                       </CFormGroup>
-                      <CFormGroup>
+                      <CFormGroup>{console.log(dataForEdit)}
                           <TextField  label="Nom d'utilisateur*:" name="username" 
-                          type="selectString" options={allTestTypes}/>
+                          type="selectString" options={allKeycloalUserWithoutProfile}/>
                           <CFormText className="help-block">Veuillez choisir le nom d'utilisateur</CFormText>
                       </CFormGroup>
                       <CFormGroup>
@@ -249,6 +252,8 @@ const [dataForAPI = init, setDataForAPI] = useState();
       )
       }
     </Formik>   
+
+      {/* SHOW SUCCES */}
     <CCol sm="12" lg="6">
       <CToaster
         position={'top-right'}
@@ -267,6 +272,26 @@ const [dataForAPI = init, setDataForAPI] = useState();
             </CToast>
       </CToaster>
   </CCol>
+
+   {/* SHOW ERROR */}
+   <CCol sm="12" lg="6">
+      <CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={showError}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Echec de l'opération. Veuillez essayer plus tard !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+    </CCol>
   </div>
   )
 }

@@ -62,9 +62,7 @@ import ClipLoader from "react-spinners/ClipLoader";
   useEffect(() => {
     setLoadingState(true);
     
-    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`, {
-      headers: { 'Authorization': bearerAuth(UserService.getToken())}
-    })
+    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`)
       .then((response) => response.json())
       .then((json) => setData(json))
       .then(() => setLoadingState(false))

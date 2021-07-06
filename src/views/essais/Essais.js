@@ -172,21 +172,18 @@ import { EssaiContext } from "../../EssaisContext";
               return (
               <CCollapse show={details.includes(index)}>
                 <Test essai = {item} />
+                {globalData.connectedUser.institution.id === item.institution.id ?
                 <CCardBody>
                   <a href={`/#/tests/edit/${item.id}`}> 
                     <CButton size="sm" color="info">
                       Modifier
                     </CButton>
                   </a>
-                  {/* seulement le créateur de l'essai peut le supprimer. */}
-                 
-                  {globalData.connectedUser.institution.id == item.institution.id ?
                     <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.id)}}>
                       Supprimmer
-                      {console.log(globalData.connectedUser.institution.id+ '@' + item.institution.id )}
                     </CButton>
-                   :'' }
                 </CCardBody>
+                 :'' }
               </CCollapse>
             )
           }

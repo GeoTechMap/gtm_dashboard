@@ -1,4 +1,4 @@
-import React ,{useState, useEffect, useRef} from 'react'
+import React ,{useState, useEffect, useRef, useContext} from 'react'
 import {Formik, Form} from 'formik';
 import { TextField } from '../commun/TextField';
 import * as Yup from 'yup';
@@ -21,11 +21,14 @@ import {
 } from '@coreui/react';
 import UserService from "../../../src/services/UserService";
 import ClipLoader from "react-spinners/ClipLoader";
+import { EssaiContext } from "../../EssaisContext";
 
 const BasicForms = ({match}) => {
 //__toaster
-const [show, setShow] = useState(false)
+const [show, setShow] = useState(false);
+const [showError, setShowError] = useState(false);
 //__end toaster
+const [globalData, setGlobalData] = useContext(EssaiContext);
   useEffect(() => {
 
     //__START fetch all test types for the select field
@@ -34,17 +37,35 @@ const [show, setShow] = useState(false)
         .then((json) => {
           setAllTestTypes(json)
          return json;})
+
+         setAllDepartements([
+           {id:'Artibonite',nom:'Artibonite'},
+           {id:'Centre',nom:'Centre'},
+           {id:'Grand\'Anse',nom:'Grand\'Anse'},
+           {id:'Nippes',nom:'Nippes'},
+           {id:'Nord',nom:'Nord'},
+           {id:'Nord-Est',nom:'Nord-Est'},
+           {id:'Nord-Ouest',nom:'Nord-Ouest'},
+           {id:'Ouest',nom:'Ouest'},
+           {id:'Sud-Est',nom:'Sud-Est'},
+           {id:'Sud',nom:'Sud'},
+         ])
+
         //  .then((json) => setInitVal({...initVal,
         //   typeEssai:json[0].id,
         // }))
     //__END fetch all test types for the select field
 
     //__START fetch all test types for the select field
-      fetch(`http://localhost:8080/api/institutions/`)
-      .then((response) => response.json())
-      .then((json) =>{ 
-        setAllInstitutions(json)
-        return json;})
+      // fetch(`http://localhost:8080/api/institutions/`)
+      // .then((response) => response.json())
+      // .then((json) =>{ 
+      //   setAllInstitutions(json)
+      //   return json;})
+
+      setAllInstitutions([{
+        id: globalData.connectedUser.institution.id, 
+        nom: globalData.connectedUser.institution.nom}])
       // .then((json) => setInitVal({...initVal,
       //   institution:json[0].id,
       // }))
@@ -172,6 +193,7 @@ pdf:''
   const [dataForEdit, setDataForEdit] = useState(null);
   const [allTestTypes, setAllTestTypes] = useState([]);
   const [allInstitutions, setAllInstitutions] = useState([]);
+  const [allDepartements, setAllDepartements] = useState([]);
   const [alert, setAlert] = React.useState({ 
     isActive: false, status: '', message: '',})
 
@@ -200,12 +222,12 @@ pdf:''
     departement: Yup.string()
     .max(255,"Maximum 255 caractères")
     .required("Champs obligatoire"),
-    commune: Yup.string()
-    .max(255,"Maximum 255 caractères")
-    .required("Champs obligatoire"),
-    sectionCommunale: Yup.string()
-    .max(255,"Maximum 255 caractères")
-    .required("Champs obligatoire"),
+    // commune: Yup.string()
+    // .max(255,"Maximum 255 caractères")
+    // .required("Champs obligatoire"),
+    // sectionCommunale: Yup.string()
+    // .max(255,"Maximum 255 caractères")
+    // .required("Champs obligatoire"),
 
   })
   
@@ -228,8 +250,10 @@ const handleChange = (event) => {
     setDataForAPI({...dataForAPI, pdf:result.substr(result.indexOf(',') + 1)})
  
   });
+  setIsPDFPresent(true);
 };
 
+const [isPDFPresent, setIsPDFPresent] = useState(false);
 const [loadingState, setLoadingState] = useState(false);
 
   return (
@@ -241,12 +265,15 @@ const [loadingState, setLoadingState] = useState(false);
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
+
+        if(!isPDFPresent){//s'il n'y a aucun document
+          // alert('Noooooo')
+          console.log("no document");
+        }else{
         function first(){
           return new Promise(function(resolve, reject){
               console.log("First");
-              if(!dataForAPI.pdf){
-                //alert('Noooooo')
-              }
+              
               // toBase64(myFile.file, (base64String)=>{
               // })
               resolve();
@@ -270,8 +297,8 @@ const [loadingState, setLoadingState] = useState(false);
                   longitude:values.longitude,
                   altitude:values.altitude,
                   departement:values.departement,
-                  commune:values.commune,
-                  sectionCommunale:values.sectionCommunale
+                  // commune:values.commune,
+                  // sectionCommunale:values.sectionCommunale
               },
               fichier: {
                   id:match.params.id ? dataForEdit.idFichier : null,
@@ -321,12 +348,14 @@ const [loadingState, setLoadingState] = useState(false);
                       base64: dataForAPI.pdf
                     })})
                     .then(res => console.log(res))
+                    
                   }
                   )
                   .then(() => setShow(true))
                 //.then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.log(error);
+                  setShowError(true);
                   setLoadingState(false);
                 })
             }else{//_______________POST RESQUEST________________
@@ -351,6 +380,7 @@ const [loadingState, setLoadingState] = useState(false);
                // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                .catch((error) => {
                 console.log(error);
+                setShowError(true);
                 setLoadingState(false);
               })
                 // fetch(`${process.env.REACT_APP_API_URL}/api/essais`,
@@ -375,12 +405,15 @@ const [loadingState, setLoadingState] = useState(false);
 
 
       setTimeout(() => {
-        setShow(false)
+        setShow(false);
+        setShowError(false);
       }, 3000)
             // setTimeout(() => {
             //   setAlert({...alert, isActive: false, message:''})
             // }, 4000)
-      }}
+      }
+      }
+    }
     >
       { formik => (
         <div>
@@ -420,7 +453,7 @@ const [loadingState, setLoadingState] = useState(false);
                       </CFormGroup>
                       <CFormGroup>
                           <TextField  label="Département*:" name="departement" 
-                          type="select" options={allTestTypes} placeholder="Entrer le département de l'essai..."/>
+                          type="select" options={allDepartements} placeholder="Entrer le département de l'essai..."/>
                           <CFormText className="help-block">Veuillez entrer le département de l'essai</CFormText>
                       </CFormGroup>
                     </CCardBody>
@@ -432,7 +465,7 @@ const [loadingState, setLoadingState] = useState(false);
                   Informations sur l'essai   {  match.params.id}
                  </CCardHeader>
                     <CCardBody>  
-                    <CFormGroup>
+                    {/* <CFormGroup>
                           <TextField  label="Commune*:" name="commune" 
                           type="select" options={allTestTypes} placeholder="Entrer la commune de l'essai..."/>
                           <CFormText className="help-block">Veuillez entrer la commune de l'essai</CFormText>
@@ -441,7 +474,7 @@ const [loadingState, setLoadingState] = useState(false);
                           <TextField  label="Section communale*:" name="sectionCommunale" 
                           type="select" options={allTestTypes} placeholder="Entrer la section communale de l'essai..."/>
                           <CFormText className="help-block">Veuillez entrer la section communale de l'essai</CFormText>
-                      </CFormGroup>
+                      </CFormGroup> */}
                       <CFormGroup>
                         <TextField label="Mots clés:" name="motsCles" 
                         type="textarea" placeholder="Entrer les mots clés" autoComplete="motsCles"/>
@@ -462,15 +495,22 @@ const [loadingState, setLoadingState] = useState(false);
                         <input  id="custom-file-input" 
                         // onChange={onFileChange}
                         type="file" 
-                        accept="application/pdf, 
-                        application/vnd.ms-excel"     
+                        accept="application/pdf"     
                         onChange={(event) => handleChange(event)}
                           />
                         <CLabel htmlFor="custom-file-input" variant="custom-file">
                            {myFile.file ? myFile.file.name:'Choisir un fichier...'}
                         </CLabel>
                       </CCol>
-                    </CFormGroup>     
+                    </CFormGroup> 
+                    {!dataForEdit && !isPDFPresent ? 
+                      <CFormGroup row>
+                      <CCol xs="12" md="12"> 
+                      <CFormText className="help-block"><span style={{color:'red'}}>Choisir un PDF*</span></CFormText>
+                      </CCol>
+                    </CFormGroup>  
+                    : ''}   
+                     
                     </CCardBody>
                     
                     {dataForEdit ? 
@@ -493,25 +533,47 @@ const [loadingState, setLoadingState] = useState(false);
         </div>    
       )
       }
-    </Formik>  
-     <CCol sm="12" lg="6">
-     <CToaster
-       position={'top-right'}
-     > 
-           <CToast
-             show={show}
-             autohide={true && 4000}
-             fade={true}
-           >
-             <CToastHeader closeButton={true}>
-             <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
-             </CToastHeader>
-             <CToastBody  color="success">
-               Opération réussie !
-             </CToastBody>
-           </CToast>
-     </CToaster>
- </CCol>
+    </Formik> 
+
+      {/* SHOW SUCCES */} 
+      <CCol sm="12" lg="6">
+        <CToaster
+          position={'top-right'}
+        > 
+              <CToast
+                show={show}
+                autohide={true && 4000}
+                fade={true}
+              >
+                <CToastHeader closeButton={true}>
+                <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+                </CToastHeader>
+                <CToastBody  color="success">
+                  Opération réussie !
+                </CToastBody>
+              </CToast>
+        </CToaster>
+      </CCol>
+
+      {/* SHOW ERROR */}
+      <CCol sm="12" lg="6">
+      <CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={showError}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Echec de l'opération. Veuillez essayer plus tard !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+    </CCol>
  </div> 
   )
 }

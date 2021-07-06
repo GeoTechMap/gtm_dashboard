@@ -23,7 +23,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const BasicForms = ({match}) => {
   //__toaster
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
+    const [showError, setShowError] = useState(false);
   //__end toaster
 
   useEffect(() => {
@@ -103,6 +104,7 @@ const BasicForms = ({match}) => {
             .then(() => setShow(true))
             .catch((error) => {
               console.log(error);
+              setShowError(true);
               setLoadingState(false);
             })
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
@@ -113,12 +115,14 @@ const BasicForms = ({match}) => {
             .then(() => setShow(true))
             .catch((error) => {
               console.log(error);
+              setShowError(true)
               setLoadingState(false);
             })
           }
 
             setTimeout(() => {
-              setShow(false)
+              setShow(false);
+              setShowError(false);
             }, 3000)
       }}
     >
@@ -199,6 +203,7 @@ const BasicForms = ({match}) => {
       )
       }
     </Formik>   
+    {/* SHOW SUCCES */}
     <CCol sm="12" lg="6">
       <CToaster
         position={'top-right'}
@@ -216,7 +221,27 @@ const BasicForms = ({match}) => {
               </CToastBody>
             </CToast>
       </CToaster>
-  </CCol>
+    </CCol>
+
+      {/* SHOW ERROR */}
+      <CCol sm="12" lg="6">
+      <CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={showError}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Echec de l'opération. Veuillez essayer plus tard !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+    </CCol>
   </div>
   )
 }
