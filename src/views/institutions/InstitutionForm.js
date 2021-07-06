@@ -19,17 +19,19 @@ import {
   CToaster,
 } from '@coreui/react'
 import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BasicForms = ({match}) => {
   //__toaster
-    const [show, setShow] = useState(false)
+    const [show, setShow] = useState(false);
+    const [showError, setShowError] = useState(false);
   //__end toaster
 
   useEffect(() => {
    if( match.params.id ){
     fetch(`http://localhost:8080/api/institutions/`+match.params.id)
       .then((response) => response.json())
-      .then((json) => setDataForEdit(json))
+      .then((json) => setDataForEdit(json.institutionDto))
       
    }
   }, [match.params.id]);
@@ -75,7 +77,8 @@ const BasicForms = ({match}) => {
       .max(255,"Maximum 255 caractères"),
         
   })
-  
+  const [loadingState, setLoadingState] = useState(false);
+
   return (
     <div>
     <Formik
@@ -99,16 +102,27 @@ const BasicForms = ({match}) => {
           fetch(`http://localhost:8080/api/institutions/`+match.params.id, requestOptions)
             .then(response => response.json())//to do:TEST IF SUCCES first
             .then(() => setShow(true))
+            .catch((error) => {
+              console.log(error);
+              setShowError(true);
+              setLoadingState(false);
+            })
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }else{
             fetch(`http://localhost:8080/api/institutions/`, requestOptions)
             .then(response => response.json())
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
             .then(() => setShow(true))
+            .catch((error) => {
+              console.log(error);
+              setShowError(true)
+              setLoadingState(false);
+            })
           }
 
             setTimeout(() => {
-              setShow(false)
+              setShow(false);
+              setShowError(false);
             }, 3000)
       }}
     >
@@ -176,7 +190,9 @@ const BasicForms = ({match}) => {
                       </CFormGroup>      
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'}
+                      <ClipLoader loading={loadingState} size={15} />
+                      </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
                     </CCardFooter>
               </CCard>
@@ -187,6 +203,7 @@ const BasicForms = ({match}) => {
       )
       }
     </Formik>   
+    {/* SHOW SUCCES */}
     <CCol sm="12" lg="6">
       <CToaster
         position={'top-right'}
@@ -204,7 +221,27 @@ const BasicForms = ({match}) => {
               </CToastBody>
             </CToast>
       </CToaster>
-  </CCol>
+    </CCol>
+
+      {/* SHOW ERROR */}
+      <CCol sm="12" lg="6">
+      <CToaster
+        position={'top-right'}
+      > 
+            <CToast
+              show={showError}
+              autohide={true && 4000}
+              fade={true}
+            >
+              <CToastHeader closeButton={true}>
+              <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+              </CToastHeader>
+              <CToastBody  color="success">
+                Echec de l'opération. Veuillez essayer plus tard !
+              </CToastBody>
+            </CToast>
+      </CToaster>
+    </CCol>
   </div>
   )
 }

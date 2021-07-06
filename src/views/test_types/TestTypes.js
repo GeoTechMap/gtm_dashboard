@@ -6,6 +6,7 @@ import {
   CCollapse,
 } from '@coreui/react'
 import TestType from "./TestType";
+import ClipLoader from "react-spinners/ClipLoader";
 
   const TestTypes = () => {
   const [details, setDetails] = useState([])
@@ -55,14 +56,23 @@ import TestType from "./TestType";
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`)
       .then((response) => response.json())
-      .then((json) => setData(json)); 
+      .then((json) => setData(json))
+      .then(() => setLoadingState(false))
+      .catch((error) => {
+        console.log(error);
+        setLoadingState(false);
+      }); 
+     
     
   }, []);
+  
+  const [loadingState, setLoadingState] = useState(false);
 
   return (
     <div>
           <a href="/#/test_types/create" >   
             <CButton variant="outline" color="success">Ajouter</CButton>
+            <ClipLoader loading={loadingState} size={25} />
           </a>
             
           <CDataTable

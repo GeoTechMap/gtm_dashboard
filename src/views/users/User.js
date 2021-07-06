@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 
@@ -8,16 +8,17 @@ const User = (props) => {
       <CCol lg={6}>
         <CCard>
           <CCardHeader  className="text-muted">
-           Identifiant de l'utilisateur : {props.user.id}
+           Identifiant de l'utilisateur : {props.utilisateur.id}
           </CCardHeader>
           <CCardBody>
             <ul>
-              <li> Nom : {props.user.lastName}</li>
-              <li> Prénom : {props.user.firstName}</li>
-              <li> Email : {props.user.email}</li>
-              <li> Droit d'accès : {props.user.role}</li>
-              <li> Créé le : {props.user.createdAt}</li>
-              <li> Dernière modification : {props.user.updatedAt}</li>
+              <li> Nom : {props.utilisateur.nom}</li>
+              <li> Prénom : {props.utilisateur.prenom}</li>
+              <li> Email : {props.utilisateur.email}</li>
+              <li> Téléphone : {props.utilisateur.telephone}</li>
+              <li> Institution : {props.utilisateur.institution.nom}</li>
+              <li> Créé le : {props.utilisateur.createdDate}</li>
+              <li> Dernière modification : {props.utilisateur.lastModifiedDate}</li>
             </ul>
           </CCardBody>
         </CCard>

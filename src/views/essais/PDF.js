@@ -3,12 +3,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import SinglePagePDFViewer from "./single-page";
 import AllPagesPDFViewer from "./all-pages";
 import "./styles.css";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const LoadFromBase64Example = ({match}) => {
 
 
     const [data, setData] = useState({})
     useEffect(() => {
+        setLoadingState(true);
+
         fetch(`http://localhost:8080/api/file/info?id=${match.params.id}`)
         .then(response => response.json())
         .then(data =>   {
@@ -28,10 +31,18 @@ const LoadFromBase64Example = ({match}) => {
                   });
        return data;
      })
+     .then(() => setLoadingState(false))
+     .catch((error) => {
+       console.log(error);
+       setLoadingState(false);
+     }); 
       
         
       
     }, []);
+
+    const [loadingState, setLoadingState] = useState(false);
+
  
     return (
         // <div  >{console.log(globalData)}
@@ -40,6 +51,7 @@ const LoadFromBase64Example = ({match}) => {
        
         // </div>
         <div className="App">
+        <ClipLoader loading={loadingState} size={50} />
         <SinglePagePDFViewer pdf={`data:application/pdf;base64,${data.base64File}`}  />
       </div>
   

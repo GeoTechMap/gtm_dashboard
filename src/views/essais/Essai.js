@@ -36,7 +36,7 @@ const Essai = (props) => {
               <li>Latitute : {props.essai.position.latitude}</li>
               <li>Longitude : {props.essai.position.longitude}</li>
               <li>Altitude : {props.essai.position.altitude}</li>
-              <li>Fichier : {props.essai.fichier.id}</li>
+              <li>Département : {props.essai.position.departement}</li>
               <li>Créé le : {props.essai.createdDate}</li>
               <li>Créé par : <a href="www.google.com">{props.essai.createdBy}</a></li>
               <li>Dernière modification : {props.essai.lastModifiedDate}</li>

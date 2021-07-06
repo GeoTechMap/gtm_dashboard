@@ -17,18 +17,21 @@ import {
   CToastBody,
   CToastHeader,
   CToaster,
-} from '@coreui/react'
+} from '@coreui/react';
+import UserService from "../../../src/services/UserService";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const BasicForms = ({match}) => {
   //__toaster
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
+  const [showError, setShowError] = useState(false);
   //__end toaster
 
   useEffect(() => {
    if( match.params.id ){
     fetch(`http://localhost:8080/api/type_essais/`+match.params.id)
       .then((response) => response.json())
-      .then((json) => setDataForEdit(json))
+      .then((json) => setDataForEdit(json.typeEssaiDto))
       
    }
   }, [match.params.id]);
@@ -52,6 +55,8 @@ const BasicForms = ({match}) => {
       .max(255,"Maximum 255 caractères"),
         
   })
+
+  const [loadingState, setLoadingState] = useState(false);
   
   return (
     <div>
@@ -65,7 +70,8 @@ const BasicForms = ({match}) => {
        console.log(values)
           const requestOptions = {
             method: match.params.id ?'PUT':'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json',
+            'Authorization': `Bearer ${UserService.getToken()}` },
             body: JSON.stringify(values)
         };
         
@@ -74,15 +80,26 @@ const BasicForms = ({match}) => {
           fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
             .then(response => response.json())
             .then(() => setShow(true))
+            .catch((error) => {
+              console.log(error);
+              setShowError(true)
+              setLoadingState(false);
+            })
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }else{
             fetch(`http://localhost:8080/api/type_essais/`, requestOptions)
             .then(response => response.json())
             .then(() => setShow(true))
+            .catch((error) => {
+              console.log(error);
+              setShowError(true)
+              setLoadingState(false);
+            })
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
           }
           setTimeout(() => {
             setShow(false)
+            setShowError(false);
           }, 3000)
             // setTimeout(() => {
             //   setAlert({...alert, isActive: false, message:''})
@@ -126,7 +143,9 @@ const BasicForms = ({match}) => {
                       </CFormGroup>      
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} </button>
+                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} 
+                      <ClipLoader loading={loadingState} size={15} />
+                     </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
                     </CCardFooter>
               </CCard>
@@ -137,25 +156,45 @@ const BasicForms = ({match}) => {
       )
       }
     </Formik>   
+    {/* SHOW SUCCES */}
+    <CCol sm="12" lg="6">
+    <CToaster
+            position={'top-right'}
+          > 
+                <CToast
+                  show={show}
+                  autohide={true && 4000}
+                  fade={true}
+                >
+                  <CToastHeader closeButton={true}>
+                  <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+                  </CToastHeader>
+                  <CToastBody  color="success">
+                    Opération réussie !
+                  </CToastBody>
+                </CToast>
+          </CToaster>
+    </CCol>
 
-<CCol sm="12" lg="6">
-<CToaster
-        position={'top-right'}
-      > 
-            <CToast
-              show={show}
-              autohide={true && 4000}
-              fade={true}
-            >
-              <CToastHeader closeButton={true}>
-              <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
-              </CToastHeader>
-              <CToastBody  color="success">
-                Opération réussie !
-              </CToastBody>
-            </CToast>
-      </CToaster>
-</CCol>
+    {/* SHOW ERROR */}
+    <CCol sm="12" lg="6">
+          <CToaster
+            position={'top-right'}
+          > 
+                <CToast
+                  show={showError}
+                  autohide={true && 4000}
+                  fade={true}
+                >
+                  <CToastHeader closeButton={true}>
+                  <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+                  </CToastHeader>
+                  <CToastBody  color="success">
+                    Echec de l'opération. Veuillez essayer plus tard !
+                  </CToastBody>
+                </CToast>
+          </CToaster>
+        </CCol>
 </div>
   )
 }
