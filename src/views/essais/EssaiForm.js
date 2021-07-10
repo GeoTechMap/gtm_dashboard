@@ -64,8 +64,8 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
       //   return json;})
 
       setAllInstitutions([{
-        id: globalData.connectedUser.institution.id, 
-        nom: globalData.connectedUser.institution.nom}])
+        id: globalData.connectedUser ? globalData.connectedUser.institution.id : null, 
+        nom: globalData.connectedUser ? globalData.connectedUser.institution.nom : null}])
       // .then((json) => setInitVal({...initVal,
       //   institution:json[0].id,
       // }))
