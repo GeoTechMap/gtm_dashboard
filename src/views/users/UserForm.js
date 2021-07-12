@@ -166,6 +166,10 @@ const [dataForAPI = init, setDataForAPI] = useState();
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
               .then(() => setShow(true))
               .then(() => setLoadingState(false))
+              .then(() => 
+              setTimeout(() => {
+                window.location.reload()
+              }, 3000))
               .catch((error) => {
                 console.log(error);
                 setShowError(true)
@@ -177,7 +181,8 @@ const [dataForAPI = init, setDataForAPI] = useState();
       
 
             setTimeout(() => {
-              setShow(false)
+              setShow(false);
+              setShowError(false);
             }, 3000)
       }}
     >
@@ -227,7 +232,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
                         <TextField label="Email*:" name="email" type="text" placeholder="Enter l'email de l'utilisateur..." autoComplete="email"/>
                         <CFormText className="help-block">Veuillez entrer l'email de l'utilisateur</CFormText>
                       </CFormGroup>
-                      <CFormGroup>{console.log(dataForEdit)}
+                      <CFormGroup>
                           <TextField  label="Nom d'utilisateur*:" name="username" 
                           type="selectString" options={allKeycloalUserWithoutProfile}/>
                           <CFormText className="help-block">Veuillez choisir le nom d'utilisateur</CFormText>

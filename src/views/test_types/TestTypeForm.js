@@ -20,6 +20,7 @@ import {
 } from '@coreui/react';
 import UserService from "../../../src/services/UserService";
 import ClipLoader from "react-spinners/ClipLoader";
+import axios from 'axios';
 
 const BasicForms = ({match}) => {
   //__toaster
@@ -39,6 +40,7 @@ const BasicForms = ({match}) => {
   const initVal ={
     nom: '',
     sigle:'',
+    codeCouleur:'0077FF',
     description:'',
   }
   const [dataForEdit, setDataForEdit] = useState(null);
@@ -51,11 +53,14 @@ const BasicForms = ({match}) => {
       .required("Champs obligatoire"),
     sigle: Yup.string()
     .max(45,"Maximum 45 caractères"),
+    codeCouleur: Yup.string()
+    .max(6,"Maximum 6 caractères"),
     description: Yup.string()
       .max(255,"Maximum 255 caractères"),
         
   })
 
+  const [errorMessage, setErrorMessage] = useState('Echec du processus. Veuillez essayer ultérieurement !');
   const [loadingState, setLoadingState] = useState(false);
   
   return (
@@ -67,40 +72,70 @@ const BasicForms = ({match}) => {
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
-       console.log(values)
-          const requestOptions = {
-            method: match.params.id ?'PUT':'POST',
-            headers: { 'Content-Type': 'application/json',
-            'Authorization': `Bearer ${UserService.getToken()}` },
-            body: JSON.stringify(values)
-        };
+        setLoadingState(true);
+      //  console.log(values);
+
+  
+
+ 
+        const requestOptions = {
+          method: match.params.id ?'PUT':'POST',
+          headers: { 'Content-Type': 'application/json',
+          'Authorization': `Bearer ${UserService.getToken()}`,
+          "Access-Control-Allow-Origin" : "*", 
+          "Access-Control-Allow-Credentials" : true  },
+          body: JSON.stringify(values)
+      };
+
+       //check if it is POST or PUT
+       if(match.params.id){
+        fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
+          .then(response => response.json())
+          .then((res) => {
+            if(res.message !=='success'){
+             console.log(res.message)
+             setErrorMessage(res.message);
+             setShowError(true)
+             setLoadingState(false);
+            }          
+             return res;
+           })
+          .then(() => setShow(true))
+          .then(() => setLoadingState(false))
+          .catch((error) => {
+            console.log(error);
+            setShowError(true)
+            setLoadingState(false);
+          })
+          // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+      }else{
+          fetch(`http://localhost:8080/api/type_essais/`, requestOptions)
+          .then(response => response.json())
+          .then((res) => {
+           if(res.message !=='success'){
+            console.log(res.message)
+            setErrorMessage(res.message);
+            setShowError(true)
+            setLoadingState(false);
+           }          
+            return res;
+          })
+          .then(() => setShow(true))
+          .then(() => setLoadingState(false))
+          .catch((error) => {
+            console.log(error);
+            setShowError(true)
+            setLoadingState(false);
+          })
+          // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
+        }
+ 
         
-        //check if it is POST or PUT
-        if(match.params.id){
-          fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
-            .then(response => response.json())
-            .then(() => setShow(true))
-            .catch((error) => {
-              console.log(error);
-              setShowError(true)
-              setLoadingState(false);
-            })
-            // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
-        }else{
-            fetch(`http://localhost:8080/api/type_essais/`, requestOptions)
-            .then(response => response.json())
-            .then(() => setShow(true))
-            .catch((error) => {
-              console.log(error);
-              setShowError(true)
-              setLoadingState(false);
-            })
-            // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
-          }
-          setTimeout(() => {
-            setShow(false)
-            setShowError(false);
-          }, 3000)
+  setTimeout(() => {
+    setShow(false)
+    setShowError(false);
+  }, 3000)
+       
             // setTimeout(() => {
             //   setAlert({...alert, isActive: false, message:''})
             // }, 4000)
@@ -137,6 +172,10 @@ const BasicForms = ({match}) => {
                   Informations sur le type d'essai   {  match.params.id}
                  </CCardHeader>
                     <CCardBody>  
+                    <CFormGroup>
+                        <TextField label="Code couleur:" name="codeCouleur" type="text" placeholder="Exemple: 0077FF" autoComplete="codeCouleur"/>
+                        <CFormText className="help-block">Veillez entrer le code de couleur du marqueur en hexadécimal</CFormText>
+                      </CFormGroup> 
                       <CFormGroup>
                         <TextField label="Description:" type="textarea" name="description"  placeholder="Entrer la description de téléphone..." autoComplete="description"/>
                         <CFormText className="help-block">Veillez entrer la description de l'institution</CFormText>
@@ -159,21 +198,21 @@ const BasicForms = ({match}) => {
     {/* SHOW SUCCES */}
     <CCol sm="12" lg="6">
     <CToaster
-            position={'top-right'}
-          > 
-                <CToast
-                  show={show}
-                  autohide={true && 4000}
-                  fade={true}
-                >
-                  <CToastHeader closeButton={true}>
-                  <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
-                  </CToastHeader>
-                  <CToastBody  color="success">
-                    Opération réussie !
-                  </CToastBody>
-                </CToast>
-          </CToaster>
+      position={'top-right'}
+      > 
+          <CToast
+            show={show}
+            autohide={true && 4000}
+            fade={true}
+          >
+            <CToastHeader closeButton={true}>
+            <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+            </CToastHeader>
+            <CToastBody  color="success">
+              Opération réussie !
+            </CToastBody>
+          </CToast>
+      </CToaster>
     </CCol>
 
     {/* SHOW ERROR */}
@@ -190,7 +229,7 @@ const BasicForms = ({match}) => {
                   <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
                   </CToastHeader>
                   <CToastBody  color="success">
-                    Echec de l'opération. Veuillez essayer plus tard !
+                    {errorMessage}
                   </CToastBody>
                 </CToast>
           </CToaster>

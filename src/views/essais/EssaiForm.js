@@ -64,8 +64,8 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
       //   return json;})
 
       setAllInstitutions([{
-        id: globalData.connectedUser.institution.id, 
-        nom: globalData.connectedUser.institution.nom}])
+        id: globalData.connectedUser ? globalData.connectedUser.institution.id : null, 
+        nom: globalData.connectedUser ? globalData.connectedUser.institution.nom : null}])
       // .then((json) => setInitVal({...initVal,
       //   institution:json[0].id,
       // }))
@@ -85,6 +85,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         commune:json.position.commune,
         sectionCommunale:json.position.sectionCommunale,
         commentaire:json.commentaire,
+        dateRealisation:json.dateRealisation,
         motsCles:json.motsCles,
         pdf:'',
         //---------
@@ -186,6 +187,7 @@ pdf:''
     commune:'',
     sectionCommunale:'',
     commentaire:'',
+    dateRealisation:'',
     motsCles:'',
     pdf:'',
   });
@@ -217,6 +219,8 @@ pdf:''
       .required("Champs obligatoire"),
     commentaire: Yup.string()
       .max(255,"Maximum 255 caractères"),
+    dateRealisation: Yup.string()
+      .max(20,"Maximum 20 caractères"),
     motsCles: Yup.string()
     .max(255,"Maximum 255 caractères"),
     departement: Yup.string()
@@ -265,7 +269,7 @@ const [loadingState, setLoadingState] = useState(false);
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
-
+        setLoadingState(true);
         if(!isPDFPresent){//s'il n'y a aucun document
           // alert('Noooooo')
           console.log("no document");
@@ -307,6 +311,7 @@ const [loadingState, setLoadingState] = useState(false);
                   capacite:myFile.file.size
               },
               commentaire:values.commentaire,
+              dateRealisation:values.dateRealisation,
               motsCles: values.motsCles,
               pdf:dataForAPI.pdf,
               nomFichierASuprimmer:anncienNomDuFichier
@@ -352,6 +357,7 @@ const [loadingState, setLoadingState] = useState(false);
                   }
                   )
                   .then(() => setShow(true))
+                  .then(() => setLoadingState(false))
                 //.then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                 .catch((error) => {
                   console.log(error);
@@ -377,6 +383,7 @@ const [loadingState, setLoadingState] = useState(false);
                   )
                   
                   .then(() => setShow(true))
+                  .then(() => setLoadingState(false))
                // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}))
                .catch((error) => {
                 console.log(error);
@@ -475,6 +482,11 @@ const [loadingState, setLoadingState] = useState(false);
                           type="select" options={allTestTypes} placeholder="Entrer la section communale de l'essai..."/>
                           <CFormText className="help-block">Veuillez entrer la section communale de l'essai</CFormText>
                       </CFormGroup> */}
+                      <CFormGroup>
+                        <TextField label="Date de réalisation:" name="dateRealisation" 
+                        type="text" placeholder="Entrer la date de réalisation de l'essai" autoComplete="dateRealisation"/>
+                        <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (ex: 04/12/2005)</CFormText>
+                      </CFormGroup>
                       <CFormGroup>
                         <TextField label="Mots clés:" name="motsCles" 
                         type="textarea" placeholder="Entrer les mots clés" autoComplete="motsCles"/>
