@@ -239,7 +239,7 @@ const BasicForms = ({match}) => {
               <CToastHeader closeButton={true}>
               <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
               </CToastHeader>
-              <CToastBody  color="success">
+              <CToastBody  color="danger">
                 Echec de l'opération. Veuillez essayer plus tard !
               </CToastBody>
             </CToast>

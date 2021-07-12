@@ -136,7 +136,8 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
             }
             
           })})
-            .then(()=>console.log('-----------'+dataForAPI.pdf))
+            .then(()=> setIsPDFPresent(true))
+            // .then(()=>console.log('-----------'+dataForAPI.pdf))
             .catch((error) => {
                 console.error('Error:', error);
               });
@@ -276,7 +277,7 @@ const [loadingState, setLoadingState] = useState(false);
         }else{
         function first(){
           return new Promise(function(resolve, reject){
-              console.log("First");
+              // console.log("First");
               
               // toBase64(myFile.file, (base64String)=>{
               // })
@@ -286,7 +287,7 @@ const [loadingState, setLoadingState] = useState(false);
       
       function second(){
           return new Promise(function(resolve, reject){
-              console.log("Second");
+              // console.log("Second");
               setDataForAPI({
                 id:match.params.id ? dataForEdit.id : null,
                 typeEssai: {
@@ -317,7 +318,7 @@ const [loadingState, setLoadingState] = useState(false);
               nomFichierASuprimmer:anncienNomDuFichier
             })
             setDataForAPI((state) => {
-              console.log(state); // "React is awesome!"
+              // console.log(state); // "React is awesome!"
               
               return state;
             });
@@ -329,7 +330,7 @@ const [loadingState, setLoadingState] = useState(false);
       function third(){
         // console.log(dataForAPI)
           return new Promise(function(resolve, reject){
-              console.log("Third");
+              // console.log("Third");
               const requestOptions = {
                 method: match.params.id ?'PUT':'POST',
                 headers: { 'Content-Type': 'application/json',
@@ -352,7 +353,7 @@ const [loadingState, setLoadingState] = useState(false);
                       nomFichierASuprimmer:anncienNomDuFichier,
                       base64: dataForAPI.pdf
                     })})
-                    .then(res => console.log(res))
+                    // .then(res => console.log(res))
                     
                   }
                   )
@@ -378,7 +379,7 @@ const [loadingState, setLoadingState] = useState(false);
                       nomFichierASuprimmer:"",//We dont delete any old doc
                       base64: dataForAPI.pdf
                     })})
-                    .then(res => console.log(res))
+                    // .then(res => console.log(res))
                   }
                   )
                   
