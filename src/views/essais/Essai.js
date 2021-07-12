@@ -14,35 +14,40 @@ const Essai = (props) => {
       <CCol lg={6}>
         <CCard>
           <CCardHeader  className="text-muted">
-           Identifiant de l'essai : {props.essai.id}
+           Identifiant de l'essai : {props.essai.idEssai}
           </CCardHeader>
           <CCardBody>
             <ul>
               <li>Type d'essai :
-              {props.essai.typeEssai ?    <Link 
-                to={`/type_essais/edit/${props.essai.typeEssai.id}`} 
-                >{props.essai.typeEssai.nom}
+              {props.essai.idTypeEssai ?    <Link 
+                to={`/type_essais/edit/${props.essai.idTypeEssai}`} 
+                >{props.essai.nomTypeEssai}
                 </Link> 
                 : ''}
               </li>
-              <li>Institution :
-                <Link 
-                to={`/institutions/edit/${props.essai.institution.id}`} 
-                >{props.essai.institution.nom} ({props.essai.institution.sigle})
-                </Link>
+              <li>
+                <details>
+                  <summary>Institution : {props.essai.nomInstitution} ({props.essai.sigleInstitution})</summary>
+                  <ul>
+                    <li>Email : {props.essai.emailInstitution}</li>
+                    <li>Téléphone : {props.essai.telephone1Institution}</li>
+                    <li>Adresse : {props.essai.adresseInstitution}</li>
+                    <li>À propos : {props.essai.descriptionInstitution}</li>
+                  </ul>
+                </details>
               </li>
               {/* <li>Coordonnées : ({props.essai.position.latitude}, {props.essai.position.longitude}, {props.essai.position.altitude})</li>
               <li>Adresse : {props.essai.position.adresse}</li> */}
-              <li>Latitute : {props.essai.position.latitude}</li>
-              <li>Longitude : {props.essai.position.longitude}</li>
-              <li>Altitude : {props.essai.position.altitude}</li>
-              <li>Département : {props.essai.position.departement}</li>
-              <li>Créé le : {props.essai.createdDate}</li>
-              <li>Créé par : <a href="www.google.com">{props.essai.createdBy}</a></li>
-              <li>Dernière modification : {props.essai.lastModifiedDate}</li>
-              <li>Modifié par: <a href="www.google.com">{props.essai.lastModifiedBy}</a></li>
+              <li>Latitute : {props.essai.latitudePosition}</li>
+              <li>Longitude : {props.essai.longitudePosition}</li>
+              <li>Altitude : {props.essai.altitudePosition}</li>
+              <li>Département : {props.essai.departementPosition}</li>
+              {/* <li>Créé le : {props.essai.createdDateEssai}</li> */}
+              <li>Date de réalisation: {props.essai.dateRealisationEssai}</li>
+              {/* <li>Dernière modification : {props.essai.lastModifiedDateEssai}</li>
+              <li>Modifié par: <a href="www.google.com">{props.essai.lastModifiedByEssai}</a></li> */}
               <li onClick={() => handleOnClick(props.essai)}><Link 
-                to={`/pdf/${props.essai.fichier.id}`} 
+                to={`/pdf/${props.essai.idFichier}`} 
                 >Voir PDF
                 </Link></li>
             </ul>

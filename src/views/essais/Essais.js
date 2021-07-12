@@ -4,14 +4,27 @@ import {
   CDataTable,
   CButton,
   CCollapse,
+  CCol,
+  CBadge,
+  CToast,
+  CToastBody,
+  CToastHeader,
+  CToaster,
 } from '@coreui/react'
 import Test from "./Essai";
 import ClipLoader from "react-spinners/ClipLoader";
 import { EssaiContext } from "../../EssaisContext";
+import UserService from "../../../src/services/UserService";
+
 
   const Essais = () => {
     const [globalData, setGlobalData] = useContext(EssaiContext);
   const [details, setDetails] = useState([])
+
+      //__toaster
+      const [show, setShow] = useState(false);
+      const [showError, setShowError] = useState(false);
+      //__end toaster
 
   const toggleDetails = (index,id) => {
     const position = details.indexOf(index)
@@ -26,13 +39,13 @@ import { EssaiContext } from "../../EssaisContext";
   }
 
   const fields = [
-    { key: 'id', label:'ID', _style: { width: '2%'} },
-    { key: 'typeEssai', label:'Type d\'essai', _style: { width: '20%'} },
-    { key: 'institution', label:'Institution', _style: { width: '20%'} },
+    { key: 'idEssai', label:'ID', _style: { width: '2%'} },
+    { key: 'nomTypeEssai', label:'Type d\'essai', _style: { width: '20%'} },
+    { key: 'nomInstitution', label:'Institution', _style: { width: '20%'} },
     // { key: 'departement', label:'Département', _style: { width: '20%'} },
     // { key: 'adresse', label:'Adresse', _style: { width: '20%'} },
-    { key: 'fichier', label:'Fichier', _style: { width: '20%'} },
-    { key: 'createdDate', label:'Date de création', _style: { width: '10%'} },
+    { key: 'nomFichier', label:'Fichier', _style: { width: '20%'} },
+    { key: 'dateRealisationEssai', label:'Date de réalisation', _style: { width: '10%'} },
     {
       key: 'show_details',
       label: 'Actions',
@@ -42,37 +55,55 @@ import { EssaiContext } from "../../EssaisContext";
     }
   ]
 
+  const [errorMessage, setErrorMessage] = useState('Echec du processus. Veuillez essayer ultérieurement !');
+  const [loadingState, setLoadingState] = useState(false);
+
+
   const onDelete = (id) => {
     if (window.confirm("Confirmer la suppression")) {
       const requestOptions = {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json',
+        'Authorization': `Bearer ${UserService.getToken()}`,
+        "Access-Control-Allow-Credentials" : true  },
       };
       fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+id, requestOptions)
         .then(response => console.log(response))
+        .then(() => setShow(true))
+        .then(() => setLoadingState(false))
+        .catch((error) => {
+          console.log(error);
+          setShowError(true)
+          setLoadingState(false);
+        })
       const newList = data.filter((item) => item.id !== id);
       setData(newList);
-    } else {
-      
-    }
+    } 
+
+    setTimeout(() => {
+      setShow(false)
+      setShowError(false);
+    }, 3000)
   }
 
   
   const [data, setData] = useState([])
   useEffect(() => {
-    setLoadingState(true);
+    setLoadingStateHead(true);
 
     fetch(`${process.env.REACT_APP_API_URL}/api/essais/`)
       .then((response) => response.json())
       .then((json) => setData(json))
-      .then(() => setLoadingState(false))
+      .then(() => setLoadingStateHead(false))
       .catch((error) => {
         console.log(error);
-        setLoadingState(false);
+        setLoadingStateHead(false);
       }); 
     
   }, []);
 
-  const [loadingState, setLoadingState] = useState(false);
+  const [loadingStateHead, setLoadingStateHead] = useState(false);
+
 
  
     //  const getInstitutionOfActualUser = () =>{
@@ -88,7 +119,7 @@ import { EssaiContext } from "../../EssaisContext";
     <div>
           <a href="/#/tests/create" >   
             <CButton variant="outline" color="success">Ajouter</CButton>
-            <ClipLoader loading={loadingState} size={25} />
+            <ClipLoader loading={loadingStateHead} size={25} />
          </a>
             
           <CDataTable
@@ -119,67 +150,67 @@ import { EssaiContext } from "../../EssaisContext";
               </td>
               )
           },
-          'typeEssai':
-          (item)=>{
-            return (
-              <td>{item.typeEssai ? item.typeEssai.nom : ''}</td>
-              )
-          },
-          'institution':
-          (item)=>{
-            return (
-              <td>{item.institution.nom} ({item.institution.sigle})</td>
-              )
-          },
-          'fichier':
-          (item)=>{
-            return (
-              <td>{item.fichier.nom}</td>
-              )
-          },
-          // 'departement':
+          // 'typeEssai':
           // (item)=>{
           //   return (
-          //     <td>{item.position.departement}</td>
+          //     <td>{item.typeEssai ? item.typeEssai.nom : ''}</td>
           //     )
           // },
-          // 'adresse':
+          // 'institution':
           // (item)=>{
           //   return (
-          //     <td>{item.position.adresse}</td>
+          //     <td>{item.institution.nom} ({item.institution.sigle})</td>
           //     )
           // },
-          'latitude':
-          (item)=>{
-            return (
-              <td>{item.latitude} </td>
-              )
-          },
-          'longitude':
-          (item)=>{
-            return (
-              <td>{item.longitude} </td>
-              )
-          },
-          'altitude':
-          (item)=>{
-            return (
-              <td>{item.altitude} </td>
-              )
-          },
+          // 'fichier':
+          // (item)=>{
+          //   return (
+          //     <td>{item.fichier.nom}</td>
+          //     )
+          // },
+          // // 'departement':
+          // // (item)=>{
+          // //   return (
+          // //     <td>{item.position.departement}</td>
+          // //     )
+          // // },
+          // // 'adresse':
+          // // (item)=>{
+          // //   return (
+          // //     <td>{item.position.adresse}</td>
+          // //     )
+          // // },
+          // 'latitude':
+          // (item)=>{
+          //   return (
+          //     <td>{item.latitude} </td>
+          //     )
+          // },
+          // 'longitude':
+          // (item)=>{
+          //   return (
+          //     <td>{item.longitude} </td>
+          //     )
+          // },
+          // 'altitude':
+          // (item)=>{
+          //   return (
+          //     <td>{item.altitude} </td>
+          //     )
+          // },
         'details':
             (item, index)=>{
               return (
               <CCollapse show={details.includes(index)}>
                 <Test essai = {item} />
-                {globalData.connectedUser.institution.id === item.institution.id ?
+                {globalData.connectedUser.institution.id === item.idInstitution ?
                 <CCardBody>
-                  <a href={`/#/tests/edit/${item.id}`}> 
+                  <a href={`/#/tests/edit/${item.idEssai}`}> 
                     <CButton size="sm" color="info">
                       Modifier
                     </CButton>
                   </a>
-                    <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.id)}}>
+                    <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.idEssai)}}>
                       Supprimmer
                     </CButton>
                 </CCardBody>
@@ -189,6 +220,46 @@ import { EssaiContext } from "../../EssaisContext";
           }
       }}
     />
+
+         {/* SHOW SUCCES */}
+         <CCol sm="12" lg="6">
+    <CToaster
+      position={'top-right'}
+      > 
+          <CToast
+            show={show}
+            autohide={true && 4000}
+            fade={true}
+          >
+            <CToastHeader closeButton={true}>
+            <CBadge className="mr-1" color="success">SUCCÈS</CBadge>              
+            </CToastHeader>
+            <CToastBody  color="success">
+              Opération réussie !
+            </CToastBody>
+          </CToast>
+      </CToaster>
+    </CCol>
+
+    {/* SHOW ERROR */}
+    <CCol sm="12" lg="6">
+          <CToaster
+            position={'top-right'}
+          > 
+                <CToast
+                  show={showError}
+                  autohide={true && 4000}
+                  fade={true}
+                >
+                  <CToastHeader closeButton={true}>
+                  <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
+                  </CToastHeader>
+                  <CToastBody  color="success">
+                    {errorMessage}
+                  </CToastBody>
+                </CToast>
+          </CToaster>
+        </CCol>
     </div>
     
   )

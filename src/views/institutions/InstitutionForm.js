@@ -88,7 +88,8 @@ const BasicForms = ({match}) => {
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
-       console.log(values)
+      //  console.log(values)
+      setLoadingState(true);
           const requestOptions = {
             method: match.params.id ?'PUT':'POST',
             headers: { 'Content-Type': 'application/json',
@@ -102,6 +103,7 @@ const BasicForms = ({match}) => {
           fetch(`http://localhost:8080/api/institutions/`+match.params.id, requestOptions)
             .then(response => response.json())//to do:TEST IF SUCCES first
             .then(() => setShow(true))
+            .then(() => setLoadingState(false))
             .catch((error) => {
               console.log(error);
               setShowError(true);
@@ -113,6 +115,7 @@ const BasicForms = ({match}) => {
             .then(response => response.json())
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
             .then(() => setShow(true))
+            .then(() => setLoadingState(false))
             .catch((error) => {
               console.log(error);
               setShowError(true)

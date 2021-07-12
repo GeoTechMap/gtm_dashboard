@@ -72,18 +72,12 @@ const BasicForms = ({match}) => {
       enableReinitialize
       validationSchema= {validate}
       onSubmit={values => {
+        setLoadingState(true);
       //  console.log(values);
 
-      function first(){
-        return new Promise(function(resolve, reject){
-          setLoadingState(true);
-            resolve();
-        });
-    }
+  
 
-    function second(){
-      return new Promise(function(resolve, reject){
-
+ 
         const requestOptions = {
           method: match.params.id ?'PUT':'POST',
           headers: { 'Content-Type': 'application/json',
@@ -97,7 +91,17 @@ const BasicForms = ({match}) => {
        if(match.params.id){
         fetch(`http://localhost:8080/api/type_essais/`+match.params.id, requestOptions)
           .then(response => response.json())
+          .then((res) => {
+            if(res.message !=='success'){
+             console.log(res.message)
+             setErrorMessage(res.message);
+             setShowError(true)
+             setLoadingState(false);
+            }          
+             return res;
+           })
           .then(() => setShow(true))
+          .then(() => setLoadingState(false))
           .catch((error) => {
             console.log(error);
             setShowError(true)
@@ -117,6 +121,7 @@ const BasicForms = ({match}) => {
             return res;
           })
           .then(() => setShow(true))
+          .then(() => setLoadingState(false))
           .catch((error) => {
             console.log(error);
             setShowError(true)
@@ -124,15 +129,7 @@ const BasicForms = ({match}) => {
           })
           // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }
-   
-          resolve();
-      });
-  }
-    
-      
-  first()
-  .then(second)
-  .then(()=>  setLoadingState(false));
+ 
         
   setTimeout(() => {
     setShow(false)

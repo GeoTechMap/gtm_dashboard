@@ -181,7 +181,8 @@ const [dataForAPI = init, setDataForAPI] = useState();
       
 
             setTimeout(() => {
-              setShow(false)
+              setShow(false);
+              setShowError(false);
             }, 3000)
       }}
     >
