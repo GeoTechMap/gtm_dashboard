@@ -30,6 +30,7 @@ const [show, setShow] = useState(false);
 const [showError, setShowError] = useState(false);
 //__end toaster
 const [globalData, setGlobalData] = useContext(EssaiContext);
+
   useEffect(() => {
 
     //__START fetch all test types for the select field
@@ -146,7 +147,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         })
       
    }
-  }, [match.params.id, dataForAPI, myFile]);
+  }, [match.params.id, dataForAPI, myFile,globalData]);
 
 
   const [myFile, setMyFile] = useState({file:null});//for the file
@@ -537,7 +538,9 @@ const [loadingState, setLoadingState] = useState(false);
                     </CFormGroup>   :''}
                      
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'}
+                      <button className="btn btn-dark mt-3" type="submit"
+                       disabled={loadingState}
+                       >{match.params.id ? 'Modifier': 'Enregistrer'}
                       <ClipLoader loading={loadingState} size={15} />
                       </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
