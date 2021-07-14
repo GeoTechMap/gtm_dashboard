@@ -24,6 +24,7 @@ const Institution = (props) => {
               <li>Créée par : <a href="www.google.com">{props.institution.createdBy}</a></li>
               <li>Dernière modification : {props.institution.lastModifiedDate}</li>
               <li>Modifiée par: <a href="www.google.com">{props.institution.lastModifiedBy}</a></li>
+              <li><a href="http://localhost:8090/auth/admin/master/console/#/realms/GTM/">Gérer les utilisateurs</a></li>
             </ul>
           </CCardBody>
         </CCard>

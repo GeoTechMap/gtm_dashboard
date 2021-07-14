@@ -244,7 +244,9 @@ const [dataForAPI = init, setDataForAPI] = useState();
                       </CFormGroup>
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'} 
+                      <button className="btn btn-dark mt-3" type="submit"
+                         disabled={loadingState}
+                         >{match.params.id ? 'Modifier': 'Enregistrer'} 
                       <ClipLoader loading={loadingState} size={15} />
                       </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>

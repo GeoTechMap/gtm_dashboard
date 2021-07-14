@@ -193,7 +193,9 @@ const BasicForms = ({match}) => {
                       </CFormGroup>      
                     </CCardBody>
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'}
+                      <button className="btn btn-dark mt-3" type="submit"
+                      disabled={loadingState}
+                      >{match.params.id ? 'Modifier': 'Enregistrer'}
                       <ClipLoader loading={loadingState} size={15} />
                       </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
@@ -239,7 +241,7 @@ const BasicForms = ({match}) => {
               <CToastHeader closeButton={true}>
               <CBadge className="mr-1" color="danger">ECHEC</CBadge>              
               </CToastHeader>
-              <CToastBody  color="success">
+              <CToastBody  color="danger">
                 Echec de l'opération. Veuillez essayer plus tard !
               </CToastBody>
             </CToast>

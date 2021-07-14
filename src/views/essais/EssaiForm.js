@@ -23,12 +23,14 @@ import UserService from "../../../src/services/UserService";
 import ClipLoader from "react-spinners/ClipLoader";
 import { EssaiContext } from "../../EssaisContext";
 
+
 const BasicForms = ({match}) => {
 //__toaster
 const [show, setShow] = useState(false);
 const [showError, setShowError] = useState(false);
 //__end toaster
 const [globalData, setGlobalData] = useContext(EssaiContext);
+
   useEffect(() => {
 
     //__START fetch all test types for the select field
@@ -136,7 +138,8 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
             }
             
           })})
-            .then(()=>console.log('-----------'+dataForAPI.pdf))
+            .then(()=> setIsPDFPresent(true))
+            // .then(()=>console.log('-----------'+dataForAPI.pdf))
             .catch((error) => {
                 console.error('Error:', error);
               });
@@ -144,7 +147,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         })
       
    }
-  }, [match.params.id, dataForAPI, myFile]);
+  }, [match.params.id, dataForAPI, myFile,globalData]);
 
 
   const [myFile, setMyFile] = useState({file:null});//for the file
@@ -209,10 +212,12 @@ pdf:''
       .min(1,"Faire un choix")
       .required("Champs obligatoire"),
     latitude: Yup.number("Entrer un nombre")
-      .max(99999999,"Maximum 255 caractères")
+      .min(17.5,"Latitude situé en dehors d'Haïti")
+      .max(21.0,"Latitude situé en dehors d'Haïti")
       .required("Champs obligatoire"),
     longitude:  Yup.number("Entrer un nombre")
-      .max(99999999,"Maximum 255 caractères")
+      .min(-75.0,"Latitude situé en dehors d'Haïti")
+      .max(-71.5,"Latitude situé en dehors d'Haïti")
       .required("Champs obligatoire"),
     altitude:  Yup.number("Entrer un nombre")
       .max(99999999,"Maximum 255 caractères")
@@ -276,7 +281,7 @@ const [loadingState, setLoadingState] = useState(false);
         }else{
         function first(){
           return new Promise(function(resolve, reject){
-              console.log("First");
+              // console.log("First");
               
               // toBase64(myFile.file, (base64String)=>{
               // })
@@ -286,7 +291,7 @@ const [loadingState, setLoadingState] = useState(false);
       
       function second(){
           return new Promise(function(resolve, reject){
-              console.log("Second");
+              // console.log("Second");
               setDataForAPI({
                 id:match.params.id ? dataForEdit.id : null,
                 typeEssai: {
@@ -317,7 +322,7 @@ const [loadingState, setLoadingState] = useState(false);
               nomFichierASuprimmer:anncienNomDuFichier
             })
             setDataForAPI((state) => {
-              console.log(state); // "React is awesome!"
+              // console.log(state); // "React is awesome!"
               
               return state;
             });
@@ -329,7 +334,7 @@ const [loadingState, setLoadingState] = useState(false);
       function third(){
         // console.log(dataForAPI)
           return new Promise(function(resolve, reject){
-              console.log("Third");
+              // console.log("Third");
               const requestOptions = {
                 method: match.params.id ?'PUT':'POST',
                 headers: { 'Content-Type': 'application/json',
@@ -352,7 +357,7 @@ const [loadingState, setLoadingState] = useState(false);
                       nomFichierASuprimmer:anncienNomDuFichier,
                       base64: dataForAPI.pdf
                     })})
-                    .then(res => console.log(res))
+                    // .then(res => console.log(res))
                     
                   }
                   )
@@ -378,7 +383,7 @@ const [loadingState, setLoadingState] = useState(false);
                       nomFichierASuprimmer:"",//We dont delete any old doc
                       base64: dataForAPI.pdf
                     })})
-                    .then(res => console.log(res))
+                    // .then(res => console.log(res))
                   }
                   )
                   
@@ -446,12 +451,12 @@ const [loadingState, setLoadingState] = useState(false);
                       <CFormGroup>
                         <TextField label="Latitude*:" name="latitude" 
                         type="text" placeholder="Entrer la latitude" autoComplete="latitude"/>
-                        <CFormText className="help-block">Veuillez entrer la latitude (ex: 76.23)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la latitude (ex: 18.54)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Longitude*:" name="longitude" 
                         type="text" placeholder="Entrer la longitude" autoComplete="longitude"/>
-                        <CFormText className="help-block">Veuillez entrer la longitude (ex: -127.89)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la longitude (ex: -72.68)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Altitude*:" name="altitude" 
@@ -483,9 +488,9 @@ const [loadingState, setLoadingState] = useState(false);
                           <CFormText className="help-block">Veuillez entrer la section communale de l'essai</CFormText>
                       </CFormGroup> */}
                       <CFormGroup>
-                        <TextField label="Date de réalisation:" name="dateRealisation" 
+                        <TextField label="Date de réalisation: (ex: 31/12/2013)" name="dateRealisation" 
                         type="text" placeholder="Entrer la date de réalisation de l'essai" autoComplete="dateRealisation"/>
-                        <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (ex: 04/12/2005)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (format: Jour/Mois/Année)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Mots clés:" name="motsCles" 
@@ -533,7 +538,9 @@ const [loadingState, setLoadingState] = useState(false);
                     </CFormGroup>   :''}
                      
                     <CCardFooter>
-                      <button className="btn btn-dark mt-3" type="submit">{match.params.id ? 'Modifier': 'Enregistrer'}
+                      <button className="btn btn-dark mt-3" type="submit"
+                       disabled={loadingState}
+                       >{match.params.id ? 'Modifier': 'Enregistrer'}
                       <ClipLoader loading={loadingState} size={15} />
                       </button>
                       <button className="btn btn-danger mt-3 ml-3" type='reset'>Réinitialiser</button>
