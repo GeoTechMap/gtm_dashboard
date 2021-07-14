@@ -202,7 +202,7 @@ import UserService from "../../../src/services/UserService";
             (item, index)=>{
               return (
               <CCollapse show={details.includes(index)}>
-                <Test essai = {item} />
+                <Test essai = {item} />{console.log(globalData.connectedUser)}
                 {globalData.connectedUser.institution.id === item.idInstitution ?
                 <CCardBody>
                   <a href={`/#/tests/edit/${item.idEssai}`}> 

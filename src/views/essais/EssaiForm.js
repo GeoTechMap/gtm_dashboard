@@ -23,6 +23,7 @@ import UserService from "../../../src/services/UserService";
 import ClipLoader from "react-spinners/ClipLoader";
 import { EssaiContext } from "../../EssaisContext";
 
+
 const BasicForms = ({match}) => {
 //__toaster
 const [show, setShow] = useState(false);
@@ -210,10 +211,12 @@ pdf:''
       .min(1,"Faire un choix")
       .required("Champs obligatoire"),
     latitude: Yup.number("Entrer un nombre")
-      .max(99999999,"Maximum 255 caractères")
+      .min(17.5,"Latitude situé en dehors d'Haïti")
+      .max(21.0,"Latitude situé en dehors d'Haïti")
       .required("Champs obligatoire"),
     longitude:  Yup.number("Entrer un nombre")
-      .max(99999999,"Maximum 255 caractères")
+      .min(-75.0,"Latitude situé en dehors d'Haïti")
+      .max(-71.5,"Latitude situé en dehors d'Haïti")
       .required("Champs obligatoire"),
     altitude:  Yup.number("Entrer un nombre")
       .max(99999999,"Maximum 255 caractères")
@@ -447,12 +450,12 @@ const [loadingState, setLoadingState] = useState(false);
                       <CFormGroup>
                         <TextField label="Latitude*:" name="latitude" 
                         type="text" placeholder="Entrer la latitude" autoComplete="latitude"/>
-                        <CFormText className="help-block">Veuillez entrer la latitude (ex: 76.23)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la latitude (ex: 18.54)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Longitude*:" name="longitude" 
                         type="text" placeholder="Entrer la longitude" autoComplete="longitude"/>
-                        <CFormText className="help-block">Veuillez entrer la longitude (ex: -127.89)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la longitude (ex: -72.68)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Altitude*:" name="altitude" 
@@ -484,9 +487,9 @@ const [loadingState, setLoadingState] = useState(false);
                           <CFormText className="help-block">Veuillez entrer la section communale de l'essai</CFormText>
                       </CFormGroup> */}
                       <CFormGroup>
-                        <TextField label="Date de réalisation:" name="dateRealisation" 
+                        <TextField label="Date de réalisation: (ex: 31/12/2013)" name="dateRealisation" 
                         type="text" placeholder="Entrer la date de réalisation de l'essai" autoComplete="dateRealisation"/>
-                        <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (ex: 04/12/2005)</CFormText>
+                        <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (format: Jour/Mois/Année)</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Mots clés:" name="motsCles" 
