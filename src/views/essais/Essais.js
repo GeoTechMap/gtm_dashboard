@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import {
   CCardBody,
   CDataTable,
+  CPagination,
   CButton,
   CCollapse,
   CCol,
@@ -10,6 +11,9 @@ import {
   CToastBody,
   CToastHeader,
   CToaster,
+  CSelect,
+  CRow,
+
 } from '@coreui/react'
 import Test from "./Essai";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -91,16 +95,48 @@ import UserService from "../../../src/services/UserService";
   useEffect(() => {
     setLoadingStateHead(true);
 
-    fetch(`${process.env.REACT_APP_API_URL}/api/essais/`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/essais/fetch_with_pagination?pageSize=5&pageNumber=0`)
       .then((response) => response.json())
-      .then((json) => setData(json))
+      .then((json) => setData(json.essaiDetailsDto))
       .then(() => setLoadingStateHead(false))
       .catch((error) => {
         console.log(error);
         setLoadingStateHead(false);
       }); 
+
+      fetch(`${process.env.REACT_APP_API_URL}/api/essais/count`)
+      .then((response) => response.json())
+      .then((json) => setTotalEssais(json))
+      .catch((error) => {
+        console.log(error);
+      }); 
     
-  }, []);
+  }, [globalData]);
+  // useEffect(() => {
+  //   setLoadingStateHead(true);
+
+  //   fetch(`${process.env.REACT_APP_API_URL}/api/essais/`)
+  //     .then((response) => response.json())
+  //     .then((json) => setData(json))
+  //     .then(() => setLoadingStateHead(false))
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setLoadingStateHead(false);
+  //     }); 
+    
+  // }, []);
+  
+  const fetch_with_pagination = (pageSize, pageNumber) => {
+    console.log('fetch pagiination')
+    fetch(`${process.env.REACT_APP_API_URL}/api/essais/fetch_with_pagination?pageSize=${pageSize}&pageNumber=${pageNumber > 0 ? pageNumber : 0}`)
+    .then((response) => response.json())
+    .then((json) => setData(json.essaiDetailsDto))
+    .then(() => setLoadingStateHead(false))
+    .catch((error) => {
+      console.log(error);
+      setLoadingStateHead(false);
+    }); 
+  }
 
   const [loadingStateHead, setLoadingStateHead] = useState(false);
 
@@ -114,25 +150,59 @@ import UserService from "../../../src/services/UserService";
 
     //   }
   
-
+const [pageSize, setPageSize] = useState(5)
+const [currentPage, setActivePage] = useState(0);
+const [totalEssais, setTotalEssais] = useState(0);
   return (
     <div>
           <a href="/#/tests/create" >   
             <CButton variant="outline" color="success">Ajouter</CButton>
             <ClipLoader loading={loadingStateHead} size={25} />
          </a>
-            
-          <CDataTable
+    
+
+         <CRow style={{float:'right'}}>
+      <CCol > Essais par page
+          <CSelect name=' Essais par page' onChange={(e)=>{
+              setPageSize(parseInt(e.target.value) );
+                fetch_with_pagination(e.target.value, 0);
+             
+            }}
+            className={`form-control shadow-none `}>
+                     <option value={5}>5</option>
+                      <option value={10}>10</option>
+                      <option value={20}>20</option>
+                      <option value={50}>50</option>
+            </CSelect>
+        </CCol>
+        </CRow>
+
+          <CDataTable outlined
       items={data ? data : null}
       fields={fields}
-      columnFilter
+      // dark
+      responsive
+      // columnFilter
       tableFilter
-      footer
-      itemsPerPageSelect
-      itemsPerPage={5}
+      // footer
+      // itemsPerPageSelect={{
+      //   label:'Essais par page',
+      //   // values:[5, 10, 20, 50],
+      //   // external:true
+      // }}
+      itemsPerPage ={pageSize}
+    
+      // pagination-change={(i) =>console.log(i)}
       hover
       sorter
-      pagination
+      onTableFilterChange={(keyWord) => console.log(keyWord)}
+      // pagination={{
+      //   pages:15
+      // }}
+      // onPageChange={(pageNumber) => fetch_with_pagination(5, pageNumber)
+      //   // console.log('Page ', page
+      //   }
+
       scopedSlots = {{
         'show_details':
           (item, index)=>{
@@ -150,59 +220,12 @@ import UserService from "../../../src/services/UserService";
               </td>
               )
           },
-          // 'typeEssai':
-          // (item)=>{
-          //   return (
-          //     <td>{item.typeEssai ? item.typeEssai.nom : ''}</td>
-          //     )
-          // },
-          // 'institution':
-          // (item)=>{
-          //   return (
-          //     <td>{item.institution.nom} ({item.institution.sigle})</td>
-          //     )
-          // },
-          // 'fichier':
-          // (item)=>{
-          //   return (
-          //     <td>{item.fichier.nom}</td>
-          //     )
-          // },
-          // // 'departement':
-          // // (item)=>{
-          // //   return (
-          // //     <td>{item.position.departement}</td>
-          // //     )
-          // // },
-          // // 'adresse':
-          // // (item)=>{
-          // //   return (
-          // //     <td>{item.position.adresse}</td>
-          // //     )
-          // // },
-          // 'latitude':
-          // (item)=>{
-          //   return (
-          //     <td>{item.latitude} </td>
-          //     )
-          // },
-          // 'longitude':
-          // (item)=>{
-          //   return (
-          //     <td>{item.longitude} </td>
-          //     )
-          // },
-          // 'altitude':
-          // (item)=>{
-          //   return (
-          //     <td>{item.altitude} </td>
-          //     )
-          // },
+       
         'details':
             (item, index)=>{
               return (
               <CCollapse show={details.includes(index)}>
-                <Test essai = {item} />{console.log(globalData.connectedUser)}
+                <Test essai = {item} />
                 {globalData.connectedUser.institution.id === item.idInstitution ?
                 <CCardBody>
                   <a href={`/#/tests/edit/${item.idEssai}`}> 
@@ -220,6 +243,14 @@ import UserService from "../../../src/services/UserService";
           }
       }}
     />
+    <CPagination
+      activePage={currentPage}
+      pages={totalEssais/pageSize}
+      onActivePageChange={(pageNumber) =>{
+        setActivePage(pageNumber);
+        fetch_with_pagination(pageSize,pageNumber-1);
+      } }
+    ></CPagination>
 
          {/* SHOW SUCCES */}
          <CCol sm="12" lg="6">

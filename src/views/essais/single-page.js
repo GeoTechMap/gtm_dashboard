@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Document, Page } from "react-pdf";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default function SinglePage(props) {
   const [numPages, setNumPages] = useState(null);
@@ -29,6 +30,7 @@ export default function SinglePage(props) {
       <Document
         file={pdf}
         options={{ workerSrc: "/pdf.worker.js" }}
+        loading= {<ClipLoader loading={true} size={35} />}
         onLoadSuccess={onDocumentLoadSuccess}
       >
         <Page pageNumber={pageNumber} />
@@ -38,14 +40,14 @@ export default function SinglePage(props) {
           Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
         </p>
         <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
-          Previous
+        Précédent
         </button>
         <button
           type="button"
           disabled={pageNumber >= numPages}
           onClick={nextPage}
         >
-          Next
+          Suivant
         </button>
       </div>
     </>
