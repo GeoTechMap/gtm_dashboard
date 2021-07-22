@@ -87,6 +87,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         commune:json.position.commune,
         sectionCommunale:json.position.sectionCommunale,
         commentaire:json.commentaire,
+        code:json.code,
         dateRealisation:json.dateRealisation,
         motsCles:json.motsCles,
         pdf:'',
@@ -169,6 +170,7 @@ fichier: {
     id:null
 },
 motsCles: '',
+code:'',
 pdf:''
 }
 
@@ -190,6 +192,7 @@ pdf:''
     commune:'',
     sectionCommunale:'',
     commentaire:'',
+    code:'',
     dateRealisation:'',
     motsCles:'',
     pdf:'',
@@ -223,6 +226,8 @@ pdf:''
       .max(99999999,"Maximum 255 caractères")
       .required("Champs obligatoire"),
     commentaire: Yup.string()
+      .max(255,"Maximum 255 caractères"),
+    code: Yup.string()
       .max(255,"Maximum 255 caractères"),
     dateRealisation: Yup.string()
       .max(20,"Maximum 20 caractères"),
@@ -292,6 +297,7 @@ const [loadingState, setLoadingState] = useState(false);
       function second(){
           return new Promise(function(resolve, reject){
               // console.log("Second");
+             
               setDataForAPI({
                 id:match.params.id ? dataForEdit.id : null,
                 typeEssai: {
@@ -316,8 +322,26 @@ const [loadingState, setLoadingState] = useState(false);
                   capacite:myFile.file.size
               },
               commentaire:values.commentaire,
+              code:values.code,
               dateRealisation:values.dateRealisation,
-              motsCles: values.motsCles,
+              motsCles: (
+                    (values.motsCles.concat(' '+ values.departement)
+                  //concater les mots cles avec le type d'essai
+                  .concat(' '+ 
+                    //get nom of selected type essai
+                    ((allTestTypes.filter( item => item.id == values.typeEssai))[0]).nom
+                    )
+                  //concater les mots cles avec le type d'essai
+                  .concat(' '+ 
+                  //get nom of selected type essai
+                  ((allInstitutions.filter( item => item.id == values.institution))[0]).nom
+                  )
+                    ).toLowerCase()
+              // on enlève les duplications
+              .split(' ').filter(function(item,i,allItems){
+                    return i==allItems.indexOf(item);
+                }).join(' ')
+              ),
               pdf:dataForAPI.pdf,
               nomFichierASuprimmer:anncienNomDuFichier
             })
@@ -488,9 +512,14 @@ const [loadingState, setLoadingState] = useState(false);
                           <CFormText className="help-block">Veuillez entrer la section communale de l'essai</CFormText>
                       </CFormGroup> */}
                       <CFormGroup>
-                        <TextField label="Date de réalisation: (ex: 31/12/2013)" name="dateRealisation" 
+                        <TextField label="Date de réalisation: (jj/mm/aaaa)" name="dateRealisation" 
                         type="text" placeholder="Entrer la date de réalisation de l'essai" autoComplete="dateRealisation"/>
                         <CFormText className="help-block">Veuillez entrer la date de réalisation de l'essai (format: Jour/Mois/Année)</CFormText>
+                      </CFormGroup>
+                      <CFormGroup>
+                        <TextField label="Code de l'essai:" name="code" 
+                        type="text" placeholder="Entrer le code de l'essai" autoComplete="code"/>
+                        <CFormText className="help-block">Veuillez entrer le code de l'essai</CFormText>
                       </CFormGroup>
                       <CFormGroup>
                         <TextField label="Mots clés:" name="motsCles" 

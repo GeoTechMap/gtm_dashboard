@@ -113,7 +113,9 @@ import ClipLoader from "react-spinners/ClipLoader";
           'institution':
           (item)=>{
             return (
-              <td>{item.institution.nom} ({item.institution.sigle})</td>
+              item.institution ? <td>{item.institution.nom} ({item.institution.sigle})</td>
+              : ''
+              
               )
           },
         'details':

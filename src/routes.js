@@ -21,28 +21,28 @@ const Fichier = React.lazy(() => import('./views/fichier/Fichier'));
 
 
 const routes = [
-  { path: '/', exact: true, name: 'Accueil', component: Dashboard , roles:['SUPER_ADMIN','ADMIN_INSTITUTION','OPERATEUR'] },
-  { path: '/dashboard', name: 'Dashboard', component: Dashboard , roles:['SUPER_ADMIN','ADMIN_INSTITUTION','OPERATEUR'] },
+  { path: '/', exact: true, name: 'Accueil', component: Dashboard , roles:['ADMIN','OPERATEUR'] },
+  { path: '/dashboard', name: 'Dashboard', component: Dashboard , roles:['ADMIN','OPERATEUR'] },
   // { path: '/carte', exact: true, name: 'Carte', component: Carte },
-  { path: '/fichier', exact: true, name: 'Fichier', component: Fichier, roles:['SUPER_ADMIN','ADMIN_INSTITUTION','OPERATEUR']},
+  { path: '/fichier', exact: true, name: 'Fichier', component: Fichier, roles:['ADMIN','OPERATEUR']},
 
-  { path: '/utilisateurs/create', exact: true, name: 'Ajouter', component: UserForm , roles:['SUPER_ADMIN','ADMIN_INSTITUTION']},//CRAETE
-  { path: '/utilisateurs', exact: true,  name: 'Utilisateurs', component: Users , roles:['SUPER_ADMIN','ADMIN_INSTITUTION']},//READ
-  { path: '/utilisateurs/edit/:id', exact: true, name: 'Modifier', component: UserForm , roles:['SUPER_ADMIN', 'ADMIN_INSTITUTION']},//UPDATE
+  { path: '/utilisateurs/create', exact: true, name: 'Ajouter', component: UserForm , roles:['ADMIN']},//CRAETE
+  { path: '/utilisateurs', exact: true,  name: 'Utilisateurs', component: Users , roles:['ADMIN']},//READ
+  { path: '/utilisateurs/edit/:id', exact: true, name: 'Modifier', component: UserForm , roles:['ADMIN',]},//UPDATE
 
-  { path: '/institutions/create', exact: true, name: 'Ajouter', component: InstitutionForm , roles:['SUPER_ADMIN']},//CRAETE
-  { path: '/institutions', exact: true,  name: 'Institutions', component: Institutions , roles:['SUPER_ADMIN']},//READ
-  { path: '/institutions/edit/:id', exact: true, name: 'Modifier', component: InstitutionForm , roles:['SUPER_ADMIN']},//UPDATE
+  { path: '/institutions/create', exact: true, name: 'Ajouter', component: InstitutionForm , roles:['ADMIN']},//CRAETE
+  { path: '/institutions', exact: true,  name: 'Institutions', component: Institutions , roles:['ADMIN']},//READ
+  { path: '/institutions/edit/:id', exact: true, name: 'Modifier', component: InstitutionForm , roles:['ADMIN']},//UPDATE
 
-  { path: '/test_types/create', exact: true, name: 'Ajouter', component: TestTypeForm , roles:['SUPER_ADMIN']},//CRAETE
-  { path: '/test_types', exact: true,  name: 'Types de d\'essais ', component: TestTypes , roles:['SUPER_ADMIN']},//READ
-  { path: '/test_types/edit/:id', exact: true, name: 'Modifier', component: TestTypeForm , roles:['SUPER_ADMIN']},//UPDATE
+  { path: '/test_types/create', exact: true, name: 'Ajouter', component: TestTypeForm , roles:['ADMIN']},//CRAETE
+  { path: '/test_types', exact: true,  name: 'Types de d\'essais ', component: TestTypes , roles:['ADMIN']},//READ
+  { path: '/test_types/edit/:id', exact: true, name: 'Modifier', component: TestTypeForm , roles:['ADMIN']},//UPDATE
 
   { path: '/tests/create', exact: true, name: 'Ajouter', component: TestForm , roles:['OPERATEUR']},//CRAETE
   { path: '/tests', exact: true,  name: 'Essais ', component: Tests , roles:['OPERATEUR']},//READ
   { path: '/tests/edit/:id', exact: true, name: 'Modifier', component: TestForm , roles:['OPERATEUR']},//UPDATE
 
-  { path: '/pdf/:id', exact: true, name: 'Document PDF', component: PDF , roles:['SUPER_ADMIN','ADMIN_INSTITUTION','OPERATEUR']}
+  { path: '/pdf/:id', exact: true, name: 'Document PDF', component: PDF , roles:['ADMIN','OPERATEUR']}
 ];
 
 export default routes;

@@ -33,24 +33,6 @@ const _nav = {
     },
 
   ],
-  adminInstitution: [
-    {
-      _tag: 'CSidebarNavItem',
-      name: 'Dashboard',
-      to: '/dashboard',
-      icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon"/>,
-    },
-    {
-      _tag: 'CSidebarNavTitle',
-      _children: ['Menu']
-    },
-    {
-      _tag: 'CSidebarNavItem',
-      name: 'Essais',
-      to: '/tests',
-      icon: 'cil-map',
-    },
-  ],
   operateur:[
     {
       _tag: 'CSidebarNavItem',

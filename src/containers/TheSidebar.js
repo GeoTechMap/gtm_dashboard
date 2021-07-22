@@ -47,8 +47,7 @@ const TheSidebar = () => {
          </CounterContextProvider> */}
       <CSidebarNav>
         <CCreateElement
-          items={ UserService.hasRole(['SUPER_ADMIN'])? navigation.admin :
-          UserService.hasRole(['ADMIN_INSTITUTION'])? navigation.adminInstitution:
+          items={ UserService.hasRole(['ADMIN'])? navigation.admin :
           UserService.hasRole(['OPERATEUR'])? navigation.operateur:
           []}
           components={{

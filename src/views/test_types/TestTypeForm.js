@@ -174,7 +174,8 @@ const BasicForms = ({match}) => {
                     <CCardBody>  
                     <CFormGroup>
                         <TextField label="Code couleur:" name="codeCouleur" type="text" placeholder="Exemple: 0077FF" autoComplete="codeCouleur"/>
-                        <CFormText className="help-block">Veillez entrer le code de couleur du marqueur en hexadécimal</CFormText>
+                        <CFormText className="help-block">Veillez entrer le code de couleur du marqueur en hexadécimal
+                         <a href="https://www.rapidtables.com/web/color/RGB_Color.html" target="_blank">(aide)</a></CFormText>
                       </CFormGroup> 
                       <CFormGroup>
                         <TextField label="Description:" type="textarea" name="description"  placeholder="Entrer la description de téléphone..." autoComplete="description"/>

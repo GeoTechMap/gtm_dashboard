@@ -43,7 +43,7 @@ import UserService from "../../../src/services/UserService";
   }
 
   const fields = [
-    { key: 'idEssai', label:'ID', _style: { width: '2%'} },
+    { key: 'codeEssai', label:'Code', _style: { width: '2%'} },
     { key: 'nomTypeEssai', label:'Type d\'essai', _style: { width: '20%'} },
     { key: 'nomInstitution', label:'Institution', _style: { width: '20%'} },
     // { key: 'departement', label:'Département', _style: { width: '20%'} },
@@ -195,7 +195,7 @@ const [totalEssais, setTotalEssais] = useState(0);
       // pagination-change={(i) =>console.log(i)}
       hover
       sorter
-      onTableFilterChange={(keyWord) => console.log(keyWord)}
+      onTableFilterChange={(keyWord) => console.log('JERE FILTR A'.keyWord)}
       // pagination={{
       //   pages:15
       // }}
@@ -226,18 +226,21 @@ const [totalEssais, setTotalEssais] = useState(0);
               return (
               <CCollapse show={details.includes(index)}>
                 <Test essai = {item} />
-                {globalData.connectedUser.institution.id === item.idInstitution ?
-                <CCardBody>
-                  <a href={`/#/tests/edit/${item.idEssai}`}> 
-                    <CButton size="sm" color="info">
-                      Modifier
-                    </CButton>
-                  </a>
-                    <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.idEssai)}}>
-                      Supprimmer
-                    </CButton>
-                </CCardBody>
-                 :'' }
+                {globalData.connectedUser ?
+                <>
+                  {globalData.connectedUser.institution.id === item.idInstitution ?
+                  <CCardBody>
+                    <a href={`/#/tests/edit/${item.idEssai}`}> 
+                      <CButton size="sm" color="info">
+                        Modifier
+                      </CButton>
+                    </a>
+                      <CButton size="sm" color="danger" className="ml-1" onClick= {() =>{onDelete(item.idEssai)}}>
+                        Supprimmer
+                      </CButton>
+                  </CCardBody>
+                  :'' }
+                </> : null}
               </CCollapse>
             )
           }
@@ -245,7 +248,7 @@ const [totalEssais, setTotalEssais] = useState(0);
     />
     <CPagination
       activePage={currentPage}
-      pages={totalEssais/pageSize}
+      pages={Math.floor(totalEssais/pageSize)}
       onActivePageChange={(pageNumber) =>{
         setActivePage(pageNumber);
         fetch_with_pagination(pageSize,pageNumber-1);
