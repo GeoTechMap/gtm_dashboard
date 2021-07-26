@@ -113,7 +113,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         return json;
       })
       .then(data =>   {
-        fetch(`${process.env.FILE_SERVER_URL}/api/file/getfile`, {
+        fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/api/file/getfile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json',
             'Accept': 'application/json'},
@@ -372,7 +372,7 @@ const [loadingState, setLoadingState] = useState(false);
               fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id, requestOptions)
                 .then(response => response.json())
                 .then( essaiSaved => {
-                  fetch(`${process.env.FILE_SERVER_URL}/api/file`, {
+                  fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/api/file`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},
@@ -398,7 +398,7 @@ const [loadingState, setLoadingState] = useState(false);
                 fetch(`${process.env.REACT_APP_API_URL}/api/essais`, requestOptions)
                 .then(response => response.json())//to the app server
                 .then( essaiSaved => {
-                  fetch(`${process.env.FILE_SERVER_URL}/api/file`, {
+                  fetch(`${process.env.REACT_APP_FILE_SERVER_URL}/api/file`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},
