@@ -16,7 +16,7 @@ const Tests = React.lazy(() => import('./views/essais/Essais'));
 const PDF = React.lazy(() => import('./views/essais/PDF'));
 
 // const Carte = React.lazy(() => import('./views/carte/Carte'));
-const Fichier = React.lazy(() => import('./views/fichier/Fichier'));
+// const Fichier = React.lazy(() => import('./views/fichier/Fichier'));
 
 
 
@@ -24,7 +24,7 @@ const routes = [
   { path: '/', exact: true, name: 'Accueil', component: Dashboard , roles:['ADMIN','OPERATEUR'] },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard , roles:['ADMIN','OPERATEUR'] },
   // { path: '/carte', exact: true, name: 'Carte', component: Carte },
-  { path: '/fichier', exact: true, name: 'Fichier', component: Fichier, roles:['ADMIN','OPERATEUR']},
+  // { path: '/fichier', exact: true, name: 'Fichier', component: Fichier, roles:['ADMIN','OPERATEUR']},
 
   { path: '/utilisateurs/create', exact: true, name: 'Ajouter', component: UserForm , roles:['ADMIN']},//CRAETE
   { path: '/utilisateurs', exact: true,  name: 'Utilisateurs', component: Users , roles:['ADMIN']},//READ

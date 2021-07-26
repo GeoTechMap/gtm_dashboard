@@ -1,7 +1,7 @@
 {
   "realm": "GTM",
-  "auth-server-url": "http://localhost:8090/auth/",
-  "ssl-required": "external",
+  "auth-server-url": "http://ec2-3-139-102-254.us-east-2.compute.amazonaws.com:8080/auth/",
+  "ssl-required": "none",
   "resource": "gtm_app",
   "public-client": true,
   "verify-token-audience": true,

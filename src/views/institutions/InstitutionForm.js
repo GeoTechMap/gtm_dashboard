@@ -29,7 +29,7 @@ const BasicForms = ({match}) => {
 
   useEffect(() => {
    if( match.params.id ){
-    fetch(`http://localhost:8080/api/institutions/`+match.params.id)
+    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`+match.params.id)
       .then((response) => response.json())
       .then((json) => setDataForEdit(json.institutionDto))
       
@@ -100,7 +100,7 @@ const BasicForms = ({match}) => {
         
         //check if it is POST or PUT
         if(match.params.id){
-          fetch(`http://localhost:8080/api/institutions/`+match.params.id, requestOptions)
+          fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`+match.params.id, requestOptions)
             .then(response => response.json())//to do:TEST IF SUCCES first
             .then(() => setShow(true))
             .then(() => setLoadingState(false))
@@ -111,7 +111,7 @@ const BasicForms = ({match}) => {
             })
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
         }else{
-            fetch(`http://localhost:8080/api/institutions/`, requestOptions)
+            fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`, requestOptions)
             .then(response => response.json())
             // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
             .then(() => setShow(true))

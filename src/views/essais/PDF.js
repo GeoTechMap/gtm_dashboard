@@ -12,10 +12,10 @@ const LoadFromBase64Example = ({match}) => {
     useEffect(() => {
         setLoadingState(true);
 
-        fetch(`http://localhost:8080/api/file/info?id=${match.params.id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/api/file/info?id=${match.params.id}`)
         .then(response => response.json())
         .then(data =>   {
-            fetch(`http://localhost:8081/api/file/getfile`, {
+            fetch(`${process.env.FILE_SERVER_URL}/api/file/getfile`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json',
                 'Accept': 'application/json'},

@@ -34,7 +34,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
   useEffect(() => {
 
     //__START fetch all test types for the select field
-      fetch(`http://localhost:8080/api/type_essais/`)
+      fetch(`${process.env.REACT_APP_API_URL}/api/type_essais/`)
         .then((response) => response.json())
         .then((json) => {
           setAllTestTypes(json)
@@ -74,7 +74,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
     //__END fetch all test types for the select field
 
    if( match.params.id ){
-    fetch(`http://localhost:8080/api/essais/`+match.params.id)
+    fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id)
       .then((response) => response.json())
       .then((json) => { setDataForEdit({
         id:json.id,
@@ -113,7 +113,7 @@ const [globalData, setGlobalData] = useContext(EssaiContext);
         return json;
       })
       .then(data =>   {
-        fetch(`http://localhost:8081/api/file/getfile`, {
+        fetch(`${process.env.FILE_SERVER_URL}/api/file/getfile`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json',
             'Accept': 'application/json'},
@@ -369,10 +369,10 @@ const [loadingState, setLoadingState] = useState(false);
             console.log(dataForAPIref.current)
             //check if it is POST or PUT
             if(match.params.id){//_______________PUT RESQUEST________________
-              fetch(`http://localhost:8080/api/essais/`+match.params.id, requestOptions)
+              fetch(`${process.env.REACT_APP_API_URL}/api/essais/`+match.params.id, requestOptions)
                 .then(response => response.json())
                 .then( essaiSaved => {
-                  fetch(`http://localhost:8081/api/file`, {
+                  fetch(`${process.env.FILE_SERVER_URL}/api/file`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},
@@ -395,10 +395,10 @@ const [loadingState, setLoadingState] = useState(false);
                 })
             }else{//_______________POST RESQUEST________________
               // console.log(requestOptions.body)
-                fetch(`http://localhost:8080/api/essais`, requestOptions)
+                fetch(`${process.env.REACT_APP_API_URL}/api/essais`, requestOptions)
                 .then(response => response.json())//to the app server
                 .then( essaiSaved => {
-                  fetch(`http://localhost:8081/api/file`, {
+                  fetch(`${process.env.FILE_SERVER_URL}/api/file`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json',
                     'Accept': 'application/json'},

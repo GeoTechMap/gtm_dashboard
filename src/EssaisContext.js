@@ -10,7 +10,7 @@ export const EssaiContextProvider = props => {
 
   useEffect(() => {
             fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/search?username=${UserService.getUsername()}`)
-          .then((response) => response.json())
+          // .then((response) => response.json())
           // .then((json) => {setGlobalData({...globalData,
           //       connectedUser:json
           //     })
@@ -18,7 +18,7 @@ export const EssaiContextProvider = props => {
           //   })
             
           .then((data) => {
-            fetch('http://localhost:8080/api/type_essais')
+            fetch(`${process.env.REACT_APP_API_URL}/api/type_essais`)
             .then((response) => response.json())
             .then((json) => 
             setGlobalData({...globalData,
@@ -28,9 +28,9 @@ export const EssaiContextProvider = props => {
             listCouleurTypeEssais: json.map((typeEssai) => `#${typeEssai.codeCouleur}`) 
           }))
           })
-              .catch((error) => {
-                console.log(error);
-              }); 
+              // .catch((error) => {
+              //   console.log(error);
+              // }); 
 
    
       

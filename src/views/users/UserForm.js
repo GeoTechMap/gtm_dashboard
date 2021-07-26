@@ -29,14 +29,14 @@ const UserForm = ({match}) => {
 
   useEffect(() => {
     //__START fetch all test types for the select field
-    fetch(`http://localhost:8080/api/keycloakusers/`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/keycloakusers/`)
     .then((response) => response.json())
     .then((json) => {
     setAllKeycloalUserWithoutProfile(json)
     return json;})
 //__END fetch all test types for the select field
     //__START fetch all test types for the select field
-    fetch(`http://localhost:8080/api/institutions/`)
+    fetch(`${process.env.REACT_APP_API_URL}/api/institutions/`)
     .then((response) => response.json())
     .then((json) =>{ 
       setAllInstitutions(json)
@@ -44,7 +44,7 @@ const UserForm = ({match}) => {
 //__END fetch all test types for the select field
 
    if( match.params.id ){
-    fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id)
+    fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/`+match.params.id)
       .then((response) => response.json())
       .then((json) => setDataForEdit(
         {
@@ -150,7 +150,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
                 };
                   //check if it is POST or PUT
         if(match.params.id){
-            fetch(`http://localhost:8080/api/utilisateurs/`+match.params.id, requestOptions)
+            fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/`+match.params.id, requestOptions)
               .then(response => response.json())//to do:TEST IF SUCCES first
               .then(() => setShow(true))
               .then(() => setLoadingState(false))
@@ -161,7 +161,7 @@ const [dataForAPI = init, setDataForAPI] = useState();
               })
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
           }else{
-              fetch(`http://localhost:8080/api/utilisateurs/`, requestOptions)
+              fetch(`${process.env.REACT_APP_API_URL}/api/utilisateurs/`, requestOptions)
               .then(response => response.json())
               // .then(data =>   setAlert({ ...alert,isActive: true, message: "Opération réussie !"}));
               .then(() => setShow(true))
